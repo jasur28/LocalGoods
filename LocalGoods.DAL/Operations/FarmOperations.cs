@@ -27,7 +27,7 @@ namespace LocalGoods.DAL.Operations
 
         public bool Remove(int id)
         {
-            
+            throw new NotImplementedException();
         }
 
         public Farm Update(Farm item)
