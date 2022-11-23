@@ -10,6 +10,13 @@ namespace LocalGoods.DAL.Data
 {
     public class LocalGoodsDbContext : DbContext
     {
+        public LocalGoodsDbContext()
+        { }
+        public LocalGoodsDbContext(DbContextOptions<LocalGoodsDbContext> options)
+            : base(options)
+        {
+
+        }
         public virtual DbSet<Farm> Farms { get; set; }
     }
 }

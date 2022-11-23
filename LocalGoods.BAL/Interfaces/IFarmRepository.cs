@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalGoods.DAL.Contracts
+namespace LocalGoods.BAL.Interfaces
 {
-    public interface IRepositoryFarm
+    public interface IFarmRepository
     {
-        public Farm Create(Farm item);
+        public Task<Farm> Create(Farm item);
         public bool Remove(int id);
         public Farm Update(Farm item);
         public List<Farm> GetAll();

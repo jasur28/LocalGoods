@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\LocalGoods.BAL\LocalGoods.BAL.csproj" />
     <ProjectReference Include="..\LocalGoods.DAL\LocalGoods.DAL.csproj" />
   </ItemGroup>
