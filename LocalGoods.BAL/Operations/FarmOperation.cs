@@ -20,18 +20,10 @@ namespace LocalGoods.BAL.Operations
 
         public async Task<Farm> Create(Farm item)
         {
-            if(item is null)
-                throw new ArgumentNullException(nameof(item), "item is empty or null ");
-            Farm newFarm = new Farm()
-            {
-                FarmName = item.FarmName,
-                FarmAddress = item.FarmAddress
-            };
-
-            await _context.Farms.AddAsync(newFarm);
+            await _context.Farms.AddAsync(item);
             await _context.SaveChangesAsync();
 
-            return newFarm;
+            return item;
         }
 
         public List<Farm> GetAll()
