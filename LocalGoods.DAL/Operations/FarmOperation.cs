@@ -1,4 +1,5 @@
-﻿using LocalGoods.DAL.Contracts;
+﻿using LocalGoods.DAL.Interfaces;
+using LocalGoods.DAL.Data;
 using LocalGoods.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,21 @@ using System.Threading.Tasks;
 
 namespace LocalGoods.DAL.Operations
 {
-    public class FarmOperations : IRepositoryFarm
+    public class FarmOperation : IFarmRepository
     {
-        public Farm Create(Farm item)
+        private readonly LocalGoodsDbContext _context;
+
+        public FarmOperation(LocalGoodsDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task<Farm> Create(Farm item)
+        {
+            await _context.Farms.AddAsync(item);
+            await _context.SaveChangesAsync();
+
+            return item;
         }
 
         public List<Farm> GetAll()
