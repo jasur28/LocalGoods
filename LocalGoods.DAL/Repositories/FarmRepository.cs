@@ -1,11 +1,7 @@
 ﻿using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Data;
 using LocalGoods.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocalGoods.DAL.Operations
 {
@@ -26,22 +22,33 @@ namespace LocalGoods.DAL.Operations
             return item;
         }
 
-        public List<Farm> GetAll()
+        public async Task<List<Farm>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Farm GetById(int id)
+        public async Task<Farm> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Farms.FindAsync(id);
         }
 
-        public bool Remove(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            Farm removeFarm = await GetById(id);
+
+            _context.Farms.Remove(removeFarm);
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
         }
 
-        public Farm Update(Farm item)
+        public async Task<Farm> Update(Farm item)
         {
             throw new NotImplementedException();
         }

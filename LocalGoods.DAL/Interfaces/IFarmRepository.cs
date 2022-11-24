@@ -10,9 +10,9 @@ namespace LocalGoods.DAL.Interfaces
     public interface IFarmRepository
     {
         public Task<Farm> Create(Farm item);
-        public bool Remove(int id);
-        public Farm Update(Farm item);
-        public List<Farm> GetAll();
-        public Farm GetById(int id);
+        public Task<bool> Delete(int id);
+        public Task<Farm> Update(Farm item);
+        public Task<List<Farm>> GetAll();
+        public Task<Farm> GetById(int id);
     }
 }

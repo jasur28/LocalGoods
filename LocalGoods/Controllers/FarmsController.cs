@@ -1,8 +1,6 @@
 ﻿
-using LocalGoods.BAL.Services;
+using LocalGoods.BAL.DTOs;
 using LocalGoods.BAL.Services.Interfaces;
-using LocalGoods.DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocalGoods.Controllers
@@ -19,13 +17,32 @@ namespace LocalGoods.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Farm>> Post(Farm farm)
+        public async Task<ActionResult<FarmDTO>> Create(FarmDTO farm)
         {
             if (farm is null)
                 return BadRequest();
-            var f = await farmService.AddFarm(farm);
+            var createFarm = await farmService.Create(farm);
 
-            return Ok(f);
+            return Ok(createFarm);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<FarmDTO>> Get(int id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            FarmDTO farm = await farmService.Get(id);
+            return Ok(farm);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<bool>> Delete(int id)
+        {
+            var deleteFarm = await farmService.Delete(id);
+
+            return Ok(deleteFarm);
         }
     }
 }
