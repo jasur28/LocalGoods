@@ -1,10 +1,11 @@
-using LocalGoods.BAL.Interfaces;
-using LocalGoods.BAL.Operations;
+using LocalGoods.DAL.Interfaces;
+using LocalGoods.DAL.Operations;
 using LocalGoods.DAL.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using LocalGoods.BAL.Services.Interfaces;
+using LocalGoods.BAL.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<LocalGoodsDbContext>(options =>
 
 //Added Scoped
 builder.Services.AddScoped<IFarmRepository, FarmOperation>();
+builder.Services.AddScoped<IFarmService, FarmService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

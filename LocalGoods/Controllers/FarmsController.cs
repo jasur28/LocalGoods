@@ -1,5 +1,6 @@
-﻿using LocalGoods.BAL.Interfaces;
-using LocalGoods.BAL.Operations;
+﻿
+using LocalGoods.BAL.Services;
+using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,11 @@ namespace LocalGoods.Controllers
     [ApiController]
     public class FarmsController : ControllerBase
     {
-        private readonly IFarmRepository farmRepository;
+        private readonly IFarmService farmService;
 
-        public FarmsController(IFarmRepository farmRepository)
+        public FarmsController(IFarmService farmService)
         {
-            this.farmRepository = farmRepository;
+            this.farmService = farmService;
         }
 
         [HttpPost]
@@ -22,7 +23,7 @@ namespace LocalGoods.Controllers
         {
             if (farm is null)
                 return BadRequest();
-            var f = await farmRepository.Create(farm);
+            var f = await farmService.AddFarm(farm);
 
             return Ok(f);
         }
