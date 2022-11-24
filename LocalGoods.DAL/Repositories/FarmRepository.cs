@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace LocalGoods.DAL.Operations
 {
-    public class FarmOperation : IFarmRepository
+    public class FarmRepository : IFarmRepository
     {
         private readonly LocalGoodsDbContext _context;
 
-        public FarmOperation(LocalGoodsDbContext context)
+        public FarmRepository(LocalGoodsDbContext context)
         {
             _context = context;
         }

@@ -14,7 +14,7 @@ builder.Services.AddDbContext<LocalGoodsDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Added Scoped
-builder.Services.AddScoped<IFarmRepository, FarmOperation>();
+builder.Services.AddScoped<IFarmRepository, FarmRepository>();
 builder.Services.AddScoped<IFarmService, FarmService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
