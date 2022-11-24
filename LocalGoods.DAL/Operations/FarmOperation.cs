@@ -1,4 +1,4 @@
-﻿using LocalGoods.BAL.Interfaces;
+﻿using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Data;
 using LocalGoods.DAL.Models;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalGoods.BAL.Operations
+namespace LocalGoods.DAL.Operations
 {
     public class FarmOperation : IFarmRepository
     {

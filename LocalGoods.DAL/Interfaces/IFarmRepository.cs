@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocalGoods.BAL.Interfaces
+namespace LocalGoods.DAL.Interfaces
 {
     public interface IFarmRepository
     {
