@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LocalGoods.BAL.Services.Interfaces
 {
-    public interface IFarmServices
+    public interface IFarmService
     {
     }
 }
