@@ -49,5 +49,11 @@ namespace LocalGoods.Controllers
         {
             return Ok(await farmService.GetAll());
         }
+        [HttpPut("Update/{id}")]
+        public async Task<IActionResult> Put(FarmDTO farmDTO)
+        {
+            await farmService.Update(farmDTO);
+            return Ok("Updated Successfully");
+        }
     }
 }

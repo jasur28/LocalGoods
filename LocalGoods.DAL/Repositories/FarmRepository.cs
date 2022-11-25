@@ -50,7 +50,9 @@ namespace LocalGoods.DAL.Operations
 
         public async Task<Farm> Update(Farm item)
         {
-            throw new NotImplementedException();
+            _context.Entry(item).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return item;
         }
     }
 }

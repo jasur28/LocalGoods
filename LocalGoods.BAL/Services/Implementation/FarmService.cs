@@ -59,9 +59,22 @@ namespace LocalGoods.BAL.Services.Implementation
             return await _farmRepository.Delete(deleteFarm.id);
         }
 
-        public Task<FarmDTO> Update(FarmDTO farm)
+        public async Task<FarmDTO> Update(FarmDTO farmDTO)
         {
-            throw new NotImplementedException();
+            Farm farm = new()
+            {
+                Id = farmDTO.id,
+                Address = farmDTO.address,
+                Name = farmDTO.name,
+            };
+            farm = await _farmRepository.Update(farm);
+            farmDTO = new()
+            {
+                id = farm.Id,
+                address = farm.Address,
+                name = farm.Name,
+            };
+            return farmDTO;
         }
 
         
