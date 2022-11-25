@@ -26,14 +26,14 @@ namespace LocalGoods.Controllers
             return Ok(createFarm);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<FarmDTO>> Get(int id)
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<FarmDTO>> GetById(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
-            FarmDTO farm = await farmService.Get(id);
+            FarmDTO farm = await farmService.Get((int)id);
             return Ok(farm);
         }
 
@@ -43,6 +43,11 @@ namespace LocalGoods.Controllers
             var deleteFarm = await farmService.Delete(id);
 
             return Ok(deleteFarm);
+        }
+        [HttpGet]
+        public async Task<ActionResult<List<FarmDTO>>> GetAll()
+        {
+            return Ok(await farmService.GetAll());
         }
     }
 }
