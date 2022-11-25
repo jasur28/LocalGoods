@@ -11,7 +11,6 @@ namespace LocalGoods.DAL.Operations
 
         public FarmRepository(LocalGoodsDbContext context)
         {
-            //Comment1
             _context = context;
         }
 
@@ -23,9 +22,9 @@ namespace LocalGoods.DAL.Operations
             return item;
         }
 
-        public async Task<List<Farm>> GetAll()
+        public async Task<IEnumerable<Farm>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Farms.ToListAsync();
         }
 
         public async Task<Farm> GetById(int id)
@@ -51,7 +50,9 @@ namespace LocalGoods.DAL.Operations
 
         public async Task<Farm> Update(Farm item)
         {
-            throw new NotImplementedException();
+            _context.Farms.Update(item);
+            await _context.SaveChangesAsync();
+            return item;
         }
     }
 }

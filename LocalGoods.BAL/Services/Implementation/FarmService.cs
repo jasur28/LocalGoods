@@ -22,13 +22,12 @@ namespace LocalGoods.BAL.Services.Implementation
                 Address = farm.address,
             };
             await _farmRepository.Create(createFarm);
-
             return farm;
         }
         public async Task<FarmDTO> Get(int id)
         {
             var getFarm=await _farmRepository.GetById(id);
-            FarmDTO farmDTO = new FarmDTO()
+            FarmDTO farmDTO = new()
             { 
                 id=getFarm.Id,
                 name=getFarm.Name,
@@ -37,9 +36,21 @@ namespace LocalGoods.BAL.Services.Implementation
             return farmDTO; 
         }
 
-        public Task<List<FarmDTO>> GetAll()
+        public async Task<List<FarmDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            List<FarmDTO> farmDTOs = new List<FarmDTO>();
+            IEnumerable<Farm> farms=await _farmRepository.GetAll();
+            foreach (var farm in farms)
+            {
+                FarmDTO farmDTO = new()
+                {
+                    id = farm.Id,
+                    name = farm.Name,
+                    address = farm.Address
+                };
+                farmDTOs.Add(farmDTO);
+            }
+            return farmDTOs;
         }
 
         public async Task<bool> Delete(int id)
@@ -48,11 +59,17 @@ namespace LocalGoods.BAL.Services.Implementation
             return await _farmRepository.Delete(deleteFarm.id);
         }
 
-        public Task<FarmDTO> Update(FarmDTO farm)
+        public async Task<FarmDTO> Update(FarmDTO farmDTO)
         {
-            throw new NotImplementedException();
+            var updateFarm = new Farm()
+            {
+                Id = farmDTO.id,
+                Name = farmDTO.name,
+                Address = farmDTO.address
+            };
+            await _farmRepository.Update(updateFarm);
+            
+            return farmDTO;
         }
-
-        
     }
 }
