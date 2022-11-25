@@ -50,7 +50,7 @@ namespace LocalGoods.DAL.Operations
 
         public async Task<Farm> Update(Farm item)
         {
-            _context.Entry(item).State = EntityState.Modified;
+            _context.Farms.Update(item);
             await _context.SaveChangesAsync();
             return item;
         }

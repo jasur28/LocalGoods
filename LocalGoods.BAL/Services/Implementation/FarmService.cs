@@ -61,22 +61,15 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<FarmDTO> Update(FarmDTO farmDTO)
         {
-            Farm farm = new()
+            var updateFarm = new Farm()
             {
                 Id = farmDTO.id,
-                Address = farmDTO.address,
                 Name = farmDTO.name,
+                Address = farmDTO.address
             };
-            farm = await _farmRepository.Update(farm);
-            farmDTO = new()
-            {
-                id = farm.Id,
-                address = farm.Address,
-                name = farm.Name,
-            };
+            await _farmRepository.Update(updateFarm);
+            
             return farmDTO;
         }
-
-        
     }
 }
