@@ -17,7 +17,7 @@ namespace LocalGoods.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<FarmDTO>> Create(FarmDTO farm)
+        public async Task<ActionResult<CreateFarmDTO>> Create(CreateFarmDTO farm)
         {
             if (farm is null)
                 return BadRequest();
