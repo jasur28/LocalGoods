@@ -11,6 +11,7 @@ namespace LocalGoods.DAL.Operations
 
         public FarmRepository(LocalGoodsDbContext context)
         {
+            //Comment1
             _context = context;
         }
 
