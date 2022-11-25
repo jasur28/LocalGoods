@@ -6,7 +6,7 @@ namespace LocalGoods.BAL.Services.Interfaces
 {
     public interface IFarmService
     {
-        Task<FarmDTO> Create(FarmDTO farm);
+        Task<CreateFarmDTO> Create(CreateFarmDTO farm);
         Task<FarmDTO> Get(int id);
         Task<FarmDTO> Update(FarmDTO farm);
         Task<bool> Delete(int id);

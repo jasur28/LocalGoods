@@ -14,7 +14,7 @@ namespace LocalGoods.BAL.Services.Implementation
             _farmRepository = farmRepository;
         }
 
-        public async Task<FarmDTO> Create(FarmDTO farm)
+        public async Task<CreateFarmDTO> Create(CreateFarmDTO farm)
         {
             var createFarm = new Farm()
             {
