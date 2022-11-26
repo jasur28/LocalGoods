@@ -6,16 +6,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.BAL.Services.Implementation;
+using LocalGoods.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<LocalGoodsDbContext>(options =>
-              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<LocalGoodsDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Added Scoped
 builder.Services.AddScoped<IFarmRepository, FarmRepository>();
 builder.Services.AddScoped<IFarmService, FarmService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IFarmProductsRepository, FarmProductsRepository>();
+builder.Services.AddScoped<IFarmProductsService, FarmProductsService>();    
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
