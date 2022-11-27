@@ -1,4 +1,5 @@
 ﻿using LocalGoods.DAL.Models;
+using LocalGoods.DAL.Models.Person;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -12,5 +13,6 @@ namespace LocalGoods.DAL.Data
 
         }
         public virtual DbSet<Farm> Farms { get; set; }
+        public DbSet<Farmer> Farmers { get; set; }
     }
 }
