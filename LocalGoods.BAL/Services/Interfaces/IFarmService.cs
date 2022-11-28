@@ -1,6 +1,4 @@
-﻿using LocalGoods.DAL.Models;
-using LocalGoods.BAL.DTOs;
-
+﻿using LocalGoods.BAL.DTOs;
 
 namespace LocalGoods.BAL.Services.Interfaces
 {

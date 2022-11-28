@@ -1,13 +1,7 @@
 ﻿using LocalGoods.DAL.Data;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
-using LocalGoods.DAL.Models.Person;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LocalGoods.DAL.Repositories
 {

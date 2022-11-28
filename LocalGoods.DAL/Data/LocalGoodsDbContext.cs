@@ -1,5 +1,4 @@
 ﻿using LocalGoods.DAL.Models;
-using LocalGoods.DAL.Models.Person;
 using Microsoft.EntityFrameworkCore;
 
 

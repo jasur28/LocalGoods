@@ -1,15 +1,7 @@
-﻿using LocalGoods.BAL.DTOs;
-using LocalGoods.BAL.DTOs.FarmerDTO;
+﻿using LocalGoods.BAL.DTOs.FarmerDTO;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
-using LocalGoods.DAL.Models.Person;
-using LocalGoods.DAL.Operations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LocalGoods.BAL.Services.Implementation
 {
