@@ -21,11 +21,9 @@ namespace LocalGoods.DAL.Repositories
             return item;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(Farmer item)
         {
-            Farmer removeFarmer = await GetById(id);
-
-            _context.Farmers.Remove(removeFarmer);
+            _context.Farmers.Remove(item);
             try
             {
                 await _context.SaveChangesAsync();

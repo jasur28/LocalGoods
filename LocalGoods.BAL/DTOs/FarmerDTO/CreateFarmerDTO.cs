@@ -4,9 +4,9 @@ namespace LocalGoods.BAL.DTOs.FarmerDTO
 {
     public class CreateFarmerDTO
     {
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string email { get; set; }
-        public string phone { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 }

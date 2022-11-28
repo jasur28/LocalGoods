@@ -3,6 +3,7 @@ using LocalGoods.BAL.DTOs.FarmerDTO;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
+using LocalGoods.DAL.Operations;
 using System.Reflection.Metadata.Ecma335;
 
 namespace LocalGoods.BAL.Services.Implementation
@@ -16,37 +17,37 @@ namespace LocalGoods.BAL.Services.Implementation
             _farmerRepository = farmerRepository;
         }
 
-        public async Task<CreateFarmerDTO> Create(CreateFarmerDTO farmer)
+        public async Task<CreateFarmerDTO> Create(CreateFarmerDTO farmerDTO)
         {
-            var createFarmer = new Farmer()
+            var farmer = new Farmer()
             {
-                FirstName = farmer.firstName,
-                LastName = farmer.lastName,
-                Email = farmer.email,
-                Phone = farmer.phone,
+                FirstName = farmerDTO.FirstName,
+                LastName = farmerDTO.LastName,
+                Email = farmerDTO.Email,
+                Phone = farmerDTO.Phone,
             };
-            await _farmerRepository.Create(createFarmer);
-            return farmer;
+            await _farmerRepository.Create(farmer);
+            return farmerDTO;
 
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(FarmerDTO farmerDTO)
         {
-            var deleteFarmer = await Get(id);
-            return await _farmerRepository.Delete(deleteFarmer.id);
+            var farmer = await _farmerRepository.GetById(farmerDTO.Id);
+            return await _farmerRepository.Delete(farmer);
 
         }
 
         public async Task<FarmerDTO> Get(int id)
         {
-            var getFarmer = await _farmerRepository.GetById(id);
+            var farmer = await _farmerRepository.GetById(id);
             FarmerDTO farmerDTO = new()
             {
-                id = getFarmer.Id,
-                firstName = getFarmer.FirstName,
-                lastName = getFarmer.LastName,
-                email = getFarmer.Email,
-                phone = getFarmer.Phone
+                Id = farmer.Id,
+                FirstName = farmer.FirstName,
+                LastName = farmer.LastName,
+                Email = farmer.Email,
+                Phone = farmer.Phone
             };
             return farmerDTO;
 
@@ -54,37 +55,44 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<List<FarmerDTO>> GetAll()
         {
-            List<FarmerDTO> farmerDTOs = new List<FarmerDTO>();
+            //List<FarmerDTO> farmerDTOs = new List<FarmerDTO>();
             IEnumerable<Farmer> farmers = await _farmerRepository.GetAll();
-            foreach (var farmer in farmers)
+            var farmersList = farmers.Select(f => new FarmerDTO
             {
-                FarmerDTO farmerDTO = new()
-                {
-                    id = farmer.Id,
-                    firstName = farmer.FirstName,
-                    lastName = farmer.LastName,
-                    email = farmer.Email,
-                    phone = farmer.Phone
-                };
-                farmerDTOs.Add(farmerDTO);
-            }
-            return farmerDTOs;
+                Id = f.Id,
+                FirstName = f.FirstName,
+                LastName = f.LastName,
+                Email = f.Email,
+                Phone = f.Phone
+            }).ToList();
+            return farmersList;
+            //foreach (var farmer in farmers)
+            //{
+            //    FarmerDTO farmerDTO = new()
+            //    {
+            //        Id = farmer.Id,
+            //        FirstName = farmer.FirstName,
+            //        LastName = farmer.LastName,
+            //        Email = farmer.Email,
+            //        Phone = farmer.Phone
+            //    };
+            //    farmerDTOs.Add(farmerDTO);
+            //}
+            //return farmerDTOs;
 
         }
 
-        public async Task<FarmerDTO> Update(FarmerDTO farmer)
+        public async Task<FarmerDTO> Update(FarmerDTO farmerDTO)
         {
-            var updateFarmer = new Farmer()
-            {
-                Id = farmer.id,
-                FirstName = farmer.firstName,
-                LastName = farmer.lastName,
-                Email = farmer.email,
-                Phone = farmer.phone
-            };
-            await _farmerRepository.Update(updateFarmer);
+            var farmer = await _farmerRepository.GetById(farmerDTO.Id);
+            farmer.FirstName = farmerDTO.FirstName;
+            farmer.LastName = farmerDTO.LastName;
+            farmer.Email = farmerDTO.Email;
+            farmer.Phone = farmerDTO.Phone;
+            
+            await _farmerRepository.Update(farmer);
 
-            return farmer;
+            return farmerDTO;
 
         }
     }

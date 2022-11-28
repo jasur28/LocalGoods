@@ -18,33 +18,29 @@ namespace LocalGoods.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateFarmerDTO>> Create(CreateFarmerDTO farm)
+        public async Task<ActionResult<CreateFarmerDTO>> Create(CreateFarmerDTO farmerDTO)
         {
-            if (farm is null)
+            if (farmerDTO.FirstName is null)
                 return BadRequest();
 
-            var createFarm = await _farmerService.Create(farm);
+            var farmer = await _farmerService.Create(farmerDTO);
 
-            return Ok(createFarm);
-        }
-
-        [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<FarmerDTO>> GetById(int? id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            FarmerDTO farmer = await _farmerService.Get((int)id);
             return Ok(farmer);
         }
 
-        [HttpDelete]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FarmerDTO>> GetById(int id)
+        {
+            FarmerDTO farmer = await _farmerService.Get(id);
+            return Ok(farmer);
+        }
+
+        [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
-            var deleteFarm = await _farmerService.Delete(id);
-
-            return Ok(deleteFarm);
+            var farmer=await _farmerService.Get(id);
+            var status = await _farmerService.Delete(farmer);
+            return Ok(status);
         }
 
         [HttpGet]
@@ -53,11 +49,17 @@ namespace LocalGoods.Controllers
             return Ok(await _farmerService.GetAll());
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Update(FarmerDTO farmerDTO)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<FarmerDTO>> Update(int id, FarmerDTO farmerDTO)
         {
-            var upadedFarm = await _farmerService.Update(farmerDTO);
-            return Ok(upadedFarm);
+            if (id != farmerDTO.Id)
+            {
+                return BadRequest();
+            }
+
+
+            var farmer = await _farmerService.Update(farmerDTO);
+            return Ok(farmer);
         }
     }
 }

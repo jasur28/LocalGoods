@@ -7,7 +7,7 @@ namespace LocalGoods.BAL.Services.Interfaces
         Task<CreateFarmerDTO> Create(CreateFarmerDTO farmer);
         Task<FarmerDTO> Get(int id);
         Task<FarmerDTO> Update(FarmerDTO farmer);
-        Task<bool> Delete(int id);
+        Task<bool> Delete(FarmerDTO farmer);
         Task<List<FarmerDTO>> GetAll();
 
     }

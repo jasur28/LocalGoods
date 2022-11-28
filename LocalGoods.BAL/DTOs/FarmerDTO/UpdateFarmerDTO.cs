@@ -1,12 +1,12 @@
-﻿namespace LocalGoods.DAL.Models
+﻿using LocalGoods.DAL.Models;
+
+namespace LocalGoods.BAL.DTOs.FarmerDTO
 {
-    public class Farmer 
+    public class UpdateFarmerDTO
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public ICollection<Farm> Farms { get; set; }
     }
 }

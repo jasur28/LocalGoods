@@ -17,7 +17,7 @@ namespace LocalGoods.DAL.Models
         [Required]
         public string Address { get; set; }
         public int FarmerId { get; set; }
-        public virtual Farmer Farmer { get; set; }
+        public Farmer Farmer { get; set; }
         [InverseProperty("Farm")]
         public virtual ICollection<FarmProductsMapping>? FarmProductMappings { get; set; }
     }

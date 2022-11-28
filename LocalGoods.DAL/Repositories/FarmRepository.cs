@@ -32,11 +32,9 @@ namespace LocalGoods.DAL.Operations
             return await _context.Farms.FindAsync(id);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(Farm item)
         {
-            Farm removeFarm = await GetById(id);
-
-            _context.Farms.Remove(removeFarm);
+            _context.Farms.Remove(item);
             try
             {
                 await _context.SaveChangesAsync();
