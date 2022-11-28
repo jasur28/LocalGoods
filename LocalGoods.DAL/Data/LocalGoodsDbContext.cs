@@ -11,7 +11,7 @@ namespace LocalGoods.DAL.Data
         {
 
         }
-        public virtual DbSet<Farm> Farms { get; set; }
+        public DbSet<Farm> Farms { get; set; }
         public DbSet<Farmer> Farmers { get; set; }
     }
 }

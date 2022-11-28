@@ -1,4 +1,6 @@
-﻿namespace LocalGoods.BAL.DTOs.FarmerDTO
+﻿using LocalGoods.DAL.Models;
+using LocalGoods.BAL.DTOs;
+namespace LocalGoods.BAL.DTOs.FarmerDTO
 {
     public class FarmerDTO
     {

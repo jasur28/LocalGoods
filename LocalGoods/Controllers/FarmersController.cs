@@ -22,6 +22,7 @@ namespace LocalGoods.Controllers
         {
             if (farm is null)
                 return BadRequest();
+
             var createFarm = await _farmerService.Create(farm);
 
             return Ok(createFarm);
@@ -34,8 +35,8 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest();
             }
-            FarmerDTO farm = await _farmerService.Get((int)id);
-            return Ok(farm);
+            FarmerDTO farmer = await _farmerService.Get((int)id);
+            return Ok(farmer);
         }
 
         [HttpDelete]
