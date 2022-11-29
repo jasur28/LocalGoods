@@ -14,24 +14,24 @@ namespace LocalGoods.BAL.Services.Implementation
             _farmRepository = farmRepository;
         }
 
-        public async Task<CreateFarmDTO> Create(CreateFarmDTO farm)
+        public async Task<CreateFarmDTO> Create(CreateFarmDTO farmDTO)
         {
-            var createFarm = new Farm()
+            var farm = new Farm()
             {
-                Name = farm.name,
-                Address = farm.address,
+                Name = farmDTO.Name,
+                Address = farmDTO.Address,
             };
-            await _farmRepository.Create(createFarm);
-            return farm;
+            await _farmRepository.Create(farm);
+            return farmDTO;
         }
         public async Task<FarmDTO> Get(int id)
         {
-            var getFarm=await _farmRepository.GetById(id);
+            var farm=await _farmRepository.GetById(id);
             FarmDTO farmDTO = new()
             { 
-                id=getFarm.Id,
-                name=getFarm.Name,
-                address=getFarm.Address
+                Id=farm.Id,
+                Name=farm.Name,
+                Address=farm.Address
             };
             return farmDTO; 
         }
@@ -44,9 +44,9 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 FarmDTO farmDTO = new()
                 {
-                    id = farm.Id,
-                    name = farm.Name,
-                    address = farm.Address
+                    Id = farm.Id,
+                    Name = farm.Name,
+                    Address = farm.Address
                 };
                 farmDTOs.Add(farmDTO);
             }
@@ -55,19 +55,25 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<bool> Delete(int id)
         {
-            var deleteFarm = await Get(id);
-            return await _farmRepository.Delete(deleteFarm.id);
+            FarmDTO farmDTO = await Get(id);
+            Farm farm = new Farm()
+            {
+                Id = farmDTO.Id,
+                Name = farmDTO.Name,
+                Address = farmDTO.Address
+            };
+            return await _farmRepository.Delete(farm);
         }
 
         public async Task<FarmDTO> Update(FarmDTO farmDTO)
         {
-            var updateFarm = new Farm()
+            var farm = new Farm()
             {
-                Id = farmDTO.id,
-                Name = farmDTO.name,
-                Address = farmDTO.address
+                Id = farmDTO.Id,
+                Name = farmDTO.Name,
+                Address = farmDTO.Address
             };
-            await _farmRepository.Update(updateFarm);
+            await _farmRepository.Update(farm);
             
             return farmDTO;
         }

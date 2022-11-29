@@ -17,6 +17,8 @@ builder.Services.AddDbContext<LocalGoodsDbContext>(
 //Added Scoped
 builder.Services.AddScoped<IFarmRepository, FarmRepository>();
 builder.Services.AddScoped<IFarmService, FarmService>();
+builder.Services.AddScoped<IFarmerService, FarmerService>();
+builder.Services.AddScoped<IFarmerRepository, FarmerRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IFarmProductsRepository, FarmProductsRepository>();
