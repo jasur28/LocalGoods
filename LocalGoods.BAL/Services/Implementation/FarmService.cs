@@ -2,6 +2,7 @@
 using LocalGoods.DAL.Models;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.BAL.DTOs;
+using LocalGoods.DAL.Repositories;
 
 namespace LocalGoods.BAL.Services.Implementation
 {
@@ -14,24 +15,35 @@ namespace LocalGoods.BAL.Services.Implementation
             _farmRepository = farmRepository;
         }
 
-        public async Task<CreateFarmDTO> Create(CreateFarmDTO farm)
+        public async Task<FarmDTO?> Create(CreateFarmDTO farmDTO)
         {
-            var createFarm = new Farm()
+            Farm? farm = new Farm()
             {
-                Name = farm.name,
-                Address = farm.address,
+                Name = farmDTO.name,
+                Address = farmDTO.address,
             };
-            await _farmRepository.Create(createFarm);
-            return farm;
+            farm=await _farmRepository.Create(farm);
+            if(farm is null)
+            {
+                return null;
+            }
+            return new FarmDTO()
+            {
+                id=farm.Id,
+                name=farm.Name,
+                address=farm.Address
+            };
         }
-        public async Task<FarmDTO> Get(int id)
+        public async Task<FarmDTO?> Get(int id)
         {
-            var getFarm=await _farmRepository.GetById(id);
+            Farm? farm=await _farmRepository.GetById(id);
+            if (farm == null)
+                return null;
             FarmDTO farmDTO = new()
             { 
-                id=getFarm.Id,
-                name=getFarm.Name,
-                address=getFarm.Address
+                id=farm.Id,
+                name=farm.Name,
+                address=farm.Address
             };
             return farmDTO; 
         }
@@ -55,21 +67,62 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<bool> Delete(int id)
         {
-            var deleteFarm = await Get(id);
-            return await _farmRepository.Delete(deleteFarm.id);
+            return await _farmRepository.Delete(id);
         }
 
-        public async Task<FarmDTO> Update(FarmDTO farmDTO)
+        public async Task<FarmDTO?> Update(FarmDTO farmDTO)
         {
-            var updateFarm = new Farm()
+            Farm farm = new()
             {
                 Id = farmDTO.id,
                 Name = farmDTO.name,
-                Address = farmDTO.address
+                Address=farmDTO.address
             };
-            await _farmRepository.Update(updateFarm);
-            
-            return farmDTO;
+            bool i = await _farmRepository.Update(farm);
+            if (i == true)
+            {
+                return new FarmDTO()
+                {
+                    id = farm.Id,
+                    name = farm.Name,
+                    address=farm.Address
+                };
+            }
+            return null;
+        }
+
+        public async Task<List<FarmProductsMappingDTO>> GetProducts(int id)
+        {
+            Farm farm = await _farmRepository.GetById(id);
+            List<FarmProductsMappingDTO> productdtos = new();
+            List<FarmProductsMapping> products1 = await _farmRepository.GetProducts(id);
+            foreach(FarmProductsMapping product in products1)
+            {
+                int? fid = product.FarmId;
+                productdtos.Add(new FarmProductsMappingDTO()
+                {
+                    ProductId = product.ProductId,
+                    FarmId = product.FarmId,
+                    FarmProductId = product.FarmProductId,
+                    Price = product.Price,
+                    Surplus = product.Surplus,
+                    Description = product.Description,
+                    FarmDTO = new FarmDTO()
+                    {
+                        id = product.Farm.Id,
+                        address = product.Farm.Address,
+                        name = product.Farm.Name
+                    },
+                    ProductDTO = new ProductDTO()
+                    {
+                        Id = product.Product.Id,
+                        Name = product.Product.Name,
+                        ImageUrl = product.Product.ImageUrl,
+                        QuantityType = product.Product.QuantityType
+                    }
+                });
+            }
+            return productdtos;
         }
     }
 }

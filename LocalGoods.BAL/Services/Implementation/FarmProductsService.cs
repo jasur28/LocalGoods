@@ -19,7 +19,7 @@ namespace LocalGoods.BAL.Services.Implementation
             this.farmProductsRepository = farmProductsRepository;
         }
 
-        public async Task<FarmProductsMappingDTO> Create(FarmProductsMappingDTO productDTO)
+        public async Task<FarmProductsMappingDTO?> Create(FarmProductsMappingDTO productDTO)
         {
             FarmProductsMapping farmProductsMapping = new()
             {
@@ -29,16 +29,24 @@ namespace LocalGoods.BAL.Services.Implementation
                 Surplus = productDTO.Surplus,
                 ProductId = productDTO.ProductId,
             };
-            farmProductsMapping = await farmProductsRepository.Create(farmProductsMapping);
-            return new FarmProductsMappingDTO()
+            try
             {
-                FarmProductId = productDTO.ProductId,
-                FarmId = productDTO.FarmId,
-                Price = productDTO.Price,
-                Description = productDTO.Description,
-                Surplus = productDTO.Surplus,
-                ProductId = productDTO.ProductId
-            };
+                farmProductsMapping = await farmProductsRepository.Create(farmProductsMapping);
+                return new FarmProductsMappingDTO()
+                {
+                    FarmProductId = productDTO.ProductId,
+                    FarmId = productDTO.FarmId,
+                    Price = productDTO.Price,
+                    Description = productDTO.Description,
+                    Surplus = productDTO.Surplus,
+                    ProductId = productDTO.ProductId
+                };
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+            
         }
         public async Task<FarmProductsMappingDTO?> Get(int id)
         {
@@ -83,12 +91,10 @@ namespace LocalGoods.BAL.Services.Implementation
         }
 
         public async Task<FarmProductsMappingDTO?> Update(FarmProductsMappingDTO productDTO)
-        {
+        { 
             FarmProductsMapping mapping = new()
             {
                 FarmProductId = productDTO.FarmProductId,
-                ProductId = productDTO.ProductId,
-                FarmId = productDTO.FarmId,
                 Price = productDTO.Price,
                 Description = productDTO.Description,
                 Surplus = productDTO.Surplus,
@@ -99,8 +105,6 @@ namespace LocalGoods.BAL.Services.Implementation
                 return new()
                 {
                     FarmProductId = productDTO.FarmProductId,
-                    ProductId = productDTO.ProductId,
-                    FarmId = productDTO.FarmId,
                     Price = productDTO.Price,
                     Description = productDTO.Description,
                     Surplus = productDTO.Surplus,
