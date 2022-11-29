@@ -41,16 +41,21 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<FarmerDTO> Get(int id)
         {
             var farmer = await _farmerRepository.GetById(id);
-            FarmerDTO farmerDTO = new()
-            {
-                Id = farmer.Id,
-                FirstName = farmer.FirstName,
-                LastName = farmer.LastName,
-                Email = farmer.Email,
-                Phone = farmer.Phone
-            };
-            return farmerDTO;
 
+            if (farmer.Id != null)
+            {
+                FarmerDTO farmerDTO = new()
+                {
+                    Id = farmer.Id,
+                    FirstName = farmer.FirstName,
+                    LastName = farmer.LastName,
+                    Email = farmer.Email,
+                    Phone = farmer.Phone
+                };
+                return farmerDTO;
+            }
+
+            return null;
         }
 
         public async Task<List<FarmerDTO>> GetAll()

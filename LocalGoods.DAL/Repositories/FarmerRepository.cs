@@ -42,7 +42,7 @@ namespace LocalGoods.DAL.Repositories
 
         public async Task<Farmer> GetById(int id)
         {
-            return await _context.Farmers.FindAsync(id);
+            return await _context.Farmers.SingleOrDefaultAsync(x=>x.Id==id);
         }
 
         public async Task<Farmer> Update(Farmer item)

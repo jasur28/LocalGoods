@@ -39,8 +39,13 @@ namespace LocalGoods.Controllers
         public async Task<ActionResult<bool>> Delete(int id)
         {
             var farmer=await _farmerService.Get(id);
-            var status = await _farmerService.Delete(farmer);
-            return Ok(status);
+            if (farmer != null)
+            {
+                var status = await _farmerService.Delete(farmer);
+                return true;
+            }
+
+            return false;
         }
 
         [HttpGet]
