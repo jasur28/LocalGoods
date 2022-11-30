@@ -1,4 +1,4 @@
-﻿using LocalGoods.DAL.Interfaces;
+using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Data;
 using LocalGoods.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +32,7 @@ namespace LocalGoods.DAL.Operations
             return await _context.Farms.FindAsync(id);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(Farm item)
         {
             Farm? farm = await GetById(id);
             if (farm != null)
@@ -56,6 +56,7 @@ namespace LocalGoods.DAL.Operations
 
         public async Task<bool> Update(Farm farm)
         {
+            _context.Farms.Remove(item);
             try
             {
                 _context.Entry(farm).State = EntityState.Modified;

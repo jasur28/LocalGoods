@@ -1,4 +1,3 @@
-﻿
 using LocalGoods.BAL.DTOs;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
@@ -24,9 +23,9 @@ namespace LocalGoods.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateFarmDTO>> Create(CreateFarmDTO farm)
+        public async Task<ActionResult<CreateFarmDTO>> Create(CreateFarmDTO farmDTO)
         {
-            if (farm is null)
+            if (farmDTO.Name is null)
                 return BadRequest();
             FarmDTO? createdFarm = await farmService.Create(farm);
             if(createdFarm is null)
@@ -38,6 +37,12 @@ namespace LocalGoods.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<FarmDTO>> GetFarm(int? id)
         {
+            var farm = await farmService.Create(farmDTO);
+            return Ok(farm);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FarmDTO>> GetById(int id)
+        {
             if (id == null)
             {
                 return BadRequest();
@@ -47,6 +52,7 @@ namespace LocalGoods.Controllers
             {
                 return NotFound();
             }
+            FarmDTO farm = await farmService.Get(id);
             return Ok(farm);
         }
 
@@ -59,7 +65,7 @@ namespace LocalGoods.Controllers
             }
             bool i = await farmService.Delete((int)id);
             return Ok(i);
-        }
+         }
         [HttpGet]
         public async Task<ActionResult<List<FarmDTO>>> GetAll()
         {
@@ -137,6 +143,8 @@ namespace LocalGoods.Controllers
         public async Task<ActionResult<bool>> DeleteMapping(int id, AFarmProductDTO productDTO)
         {
             return await farmProductsService.Delete(id);
+            var farm = await farmService.Update(farmDTO);
+            return Ok(farm);
         }
     }
 }

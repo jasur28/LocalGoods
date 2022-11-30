@@ -14,7 +14,6 @@ namespace LocalGoods.BAL.Services.Implementation
         {
             _farmRepository = farmRepository;
         }
-
         public async Task<FarmDTO?> Create(CreateFarmDTO farmDTO)
         {
             Farm? farm = new Farm()
@@ -33,6 +32,15 @@ namespace LocalGoods.BAL.Services.Implementation
                 name=farm.Name,
                 address=farm.Address
             };
+        public async Task<CreateFarmDTO> Create(CreateFarmDTO farmDTO)
+        {
+            var farm = new Farm()
+            {
+                Name = farmDTO.Name,
+                Address = farmDTO.Address,
+            };
+            await _farmRepository.Create(farm);
+            return farmDTO;
         }
         public async Task<FarmDTO?> Get(int id)
         {
@@ -44,6 +52,12 @@ namespace LocalGoods.BAL.Services.Implementation
                 id=farm.Id,
                 name=farm.Name,
                 address=farm.Address
+            var farm=await _farmRepository.GetById(id);
+            FarmDTO farmDTO = new()
+            { 
+                Id=farm.Id,
+                Name=farm.Name,
+                Address=farm.Address
             };
             return farmDTO; 
         }
@@ -56,9 +70,9 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 FarmDTO farmDTO = new()
                 {
-                    id = farm.Id,
-                    name = farm.Name,
-                    address = farm.Address
+                    Id = farm.Id,
+                    Name = farm.Name,
+                    Address = farm.Address
                 };
                 farmDTOs.Add(farmDTO);
             }
@@ -68,6 +82,14 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<bool> Delete(int id)
         {
             return await _farmRepository.Delete(id);
+            FarmDTO farmDTO = await Get(id);
+            Farm farm = new Farm()
+            {
+                Id = farmDTO.Id,
+                Name = farmDTO.Name,
+                Address = farmDTO.Address
+            };
+            return await _farmRepository.Delete(farm);
         }
 
         public async Task<FarmDTO?> Update(FarmDTO farmDTO)
@@ -123,6 +145,15 @@ namespace LocalGoods.BAL.Services.Implementation
                 });
             }
             return productdtos;
+            var farm = new Farm()
+            {
+                Id = farmDTO.Id,
+                Name = farmDTO.Name,
+                Address = farmDTO.Address
+            };
+            await _farmRepository.Update(farm);
+            
+            return farmDTO;
         }
     }
 }

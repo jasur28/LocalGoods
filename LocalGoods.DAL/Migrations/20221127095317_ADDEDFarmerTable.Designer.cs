@@ -3,6 +3,7 @@ using LocalGoods.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalGoods.DAL.Migrations
 {
     [DbContext(typeof(LocalGoodsDbContext))]
-    partial class LocalGoodsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221127095317_ADDEDFarmerTable")]
+    partial class ADDEDFarmerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,21 +35,16 @@ namespace LocalGoods.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FarmerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FarmerId");
-
                     b.ToTable("Farms");
                 });
 
-            modelBuilder.Entity("LocalGoods.DAL.Models.Farmer", b =>
+            modelBuilder.Entity("LocalGoods.DAL.Models.Person.Farmer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,22 +71,6 @@ namespace LocalGoods.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Farmers");
-                });
-
-            modelBuilder.Entity("LocalGoods.DAL.Models.Farm", b =>
-                {
-                    b.HasOne("LocalGoods.DAL.Models.Farmer", "Farmer")
-                        .WithMany("Farms")
-                        .HasForeignKey("FarmerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Farmer");
-                });
-
-            modelBuilder.Entity("LocalGoods.DAL.Models.Farmer", b =>
-                {
-                    b.Navigation("Farms");
                 });
 #pragma warning restore 612, 618
         }
