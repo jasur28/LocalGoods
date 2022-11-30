@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
+using System.Runtime.Serialization;
 
 namespace LocalGoods.BAL.DTOs
 {
@@ -22,5 +24,9 @@ namespace LocalGoods.BAL.DTOs
         public string? Description { get; set; }
         public int? Surplus { get; set; }
         public decimal? Price { get; set; }
+        [SwaggerRequestBody(Required =false)]
+        public virtual FarmDTO? FarmDTO { get; set; }
+        [SwaggerSchema(ReadOnly = true)]
+        public virtual ProductDTO? ProductDTO { get; set; }
     }
 }

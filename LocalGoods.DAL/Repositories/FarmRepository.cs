@@ -1,4 +1,4 @@
-﻿using LocalGoods.DAL.Interfaces;
+using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Data;
 using LocalGoods.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,23 +34,49 @@ namespace LocalGoods.DAL.Operations
 
         public async Task<bool> Delete(Farm item)
         {
-            _context.Farms.Remove(item);
-            try
+            Farm? farm = await GetById(id);
+            if (farm != null)
             {
-                await _context.SaveChangesAsync();
-                return true;
+                try
+                {
+                    _context.Farms.Remove(farm);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
-            catch (DbUpdateException)
+            else
             {
                 return false;
             }
         }
 
-        public async Task<Farm> Update(Farm item)
+        public async Task<bool> Update(Farm farm)
         {
-            _context.Farms.Update(item);
-            await _context.SaveChangesAsync();
-            return item;
+            _context.Farms.Remove(item);
+            try
+            {
+                _context.Entry(farm).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<FarmProductsMapping>> GetProducts(int id)
+        {
+            Farm farm= await GetById(id);
+            if(farm.FarmProductMappings is null)
+            {
+                return new List<FarmProductsMapping> { };
+            }
+            return farm.FarmProductMappings.ToList();
         }
     }
 }

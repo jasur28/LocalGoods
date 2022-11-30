@@ -10,7 +10,7 @@ namespace LocalGoods.BAL.Services.Interfaces
 {
     public interface IFarmProductsService
     {
-        Task<FarmProductsMappingDTO> Create(FarmProductsMappingDTO product);
+        Task<FarmProductsMappingDTO?> Create(FarmProductsMappingDTO product);
         Task<FarmProductsMappingDTO?> Get(int id);
         Task<FarmProductsMappingDTO?> Update(FarmProductsMappingDTO product);
         Task<bool> Delete(int id);
