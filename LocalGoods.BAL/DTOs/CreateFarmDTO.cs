@@ -1,4 +1,5 @@
-﻿namespace LocalGoods.BAL.DTOs
+﻿#nullable disable
+namespace LocalGoods.BAL.DTOs
 {
     public class CreateFarmDTO
     {

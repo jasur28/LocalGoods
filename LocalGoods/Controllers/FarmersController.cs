@@ -27,6 +27,11 @@ namespace LocalGoods.Controllers
 
             return Ok(farmer);
         }
+        [HttpGet("{FarmerId}/Farms")]
+        public async Task<ActionResult<List<FarmDTO>>> GetAll(int FarmerId)
+        {
+            return Ok(await _farmerService.GetFarms(FarmerId));
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<FarmerDTO>> GetById(int id)

@@ -40,7 +40,7 @@ namespace LocalGoods.DAL.Repositories
             return await _context.Farmers.ToListAsync();
         }
 
-        public async Task<Farmer> GetById(int id)
+        public async Task<Farmer?> GetById(int id)
         {
             return await _context.Farmers.SingleOrDefaultAsync(x=>x.Id==id);
         }
@@ -50,6 +50,15 @@ namespace LocalGoods.DAL.Repositories
             _context.Farmers.Update(item);
             await _context.SaveChangesAsync();
             return item;
+        }
+        public async Task<List<Farm>> GetFarms(int id)
+        {
+            Farmer? farmer = await GetById(id);
+            if(farmer==null || farmer.Farms is null)
+            {
+                return new List<Farm>();
+            }
+            return farmer.Farms.ToList();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LocalGoods.BAL.DTOs.FarmerDTO;
+﻿using LocalGoods.BAL.DTOs;
+using LocalGoods.BAL.DTOs.FarmerDTO;
 
 namespace LocalGoods.BAL.Services.Interfaces
 {
@@ -9,6 +10,7 @@ namespace LocalGoods.BAL.Services.Interfaces
         Task<FarmerDTO> Update(FarmerDTO farmer);
         Task<bool> Delete(FarmerDTO farmer);
         Task<List<FarmerDTO>> GetAll();
+        Task<List<FarmDTO>> GetFarms(int id);
 
     }
 }

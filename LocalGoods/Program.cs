@@ -3,6 +3,7 @@ using LocalGoods.DAL.Operations;
 using LocalGoods.DAL.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Configuration;
 using LocalGoods.BAL.Services.Interfaces;

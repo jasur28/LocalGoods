@@ -71,20 +71,6 @@ namespace LocalGoods.BAL.Services.Implementation
                 Phone = f.Phone
             }).ToList();
             return farmersList;
-            //foreach (var farmer in farmers)
-            //{
-            //    FarmerDTO farmerDTO = new()
-            //    {
-            //        Id = farmer.Id,
-            //        FirstName = farmer.FirstName,
-            //        LastName = farmer.LastName,
-            //        Email = farmer.Email,
-            //        Phone = farmer.Phone
-            //    };
-            //    farmerDTOs.Add(farmerDTO);
-            //}
-            //return farmerDTOs;
-
         }
 
         public async Task<FarmerDTO> Update(FarmerDTO farmerDTO)
@@ -99,6 +85,22 @@ namespace LocalGoods.BAL.Services.Implementation
 
             return farmerDTO;
 
+        }
+        public async Task<List<FarmDTO>> GetFarms(int id)
+        {
+            List<Farm> farms = await _farmerRepository.GetFarms(id);
+            List<FarmDTO> farmDTOs = new();
+            foreach (Farm farm in farms)
+            {
+                farmDTOs.Add(new FarmDTO()
+                {
+                    Id = farm.Id,
+                    Name = farm.Name,
+                    FarmerId = id,
+                    Address = farm.Address
+                });
+            }
+            return farmDTOs;
         }
     }
 }

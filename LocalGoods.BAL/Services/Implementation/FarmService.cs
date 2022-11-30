@@ -14,33 +14,25 @@ namespace LocalGoods.BAL.Services.Implementation
         {
             _farmRepository = farmRepository;
         }
-        public async Task<FarmDTO?> Create(CreateFarmDTO farmDTO)
+        public async Task<FarmDTO?> Create(FarmDTO farmDTO)
         {
             Farm? farm = new Farm()
             {
-                Name = farmDTO.name,
-                Address = farmDTO.address,
+                Name = farmDTO.Name,
+                Address = farmDTO.Address,
+                FarmerId= farmDTO.FarmerId
             };
-            farm=await _farmRepository.Create(farm);
-            if(farm is null)
+            farm = await _farmRepository.Create(farm);
+            if (farm is null)
             {
                 return null;
             }
             return new FarmDTO()
             {
-                id=farm.Id,
-                name=farm.Name,
-                address=farm.Address
+                Id = farm.Id,
+                Name = farm.Name,
+                Address = farm.Address,
             };
-        public async Task<CreateFarmDTO> Create(CreateFarmDTO farmDTO)
-        {
-            var farm = new Farm()
-            {
-                Name = farmDTO.Name,
-                Address = farmDTO.Address,
-            };
-            await _farmRepository.Create(farm);
-            return farmDTO;
         }
         public async Task<FarmDTO?> Get(int id)
         {
@@ -48,16 +40,11 @@ namespace LocalGoods.BAL.Services.Implementation
             if (farm == null)
                 return null;
             FarmDTO farmDTO = new()
-            { 
-                id=farm.Id,
-                name=farm.Name,
-                address=farm.Address
-            var farm=await _farmRepository.GetById(id);
-            FarmDTO farmDTO = new()
-            { 
-                Id=farm.Id,
-                Name=farm.Name,
-                Address=farm.Address
+            {
+                Id = farm.Id,
+                Name = farm.Name,
+                Address = farm.Address,
+                FarmerId=farm.FarmerId
             };
             return farmDTO; 
         }
@@ -72,7 +59,8 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     Id = farm.Id,
                     Name = farm.Name,
-                    Address = farm.Address
+                    Address = farm.Address,
+                    FarmerId=farm.FarmerId
                 };
                 farmDTOs.Add(farmDTO);
             }
@@ -82,32 +70,24 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<bool> Delete(int id)
         {
             return await _farmRepository.Delete(id);
-            FarmDTO farmDTO = await Get(id);
-            Farm farm = new Farm()
-            {
-                Id = farmDTO.Id,
-                Name = farmDTO.Name,
-                Address = farmDTO.Address
-            };
-            return await _farmRepository.Delete(farm);
         }
 
         public async Task<FarmDTO?> Update(FarmDTO farmDTO)
         {
             Farm farm = new()
             {
-                Id = farmDTO.id,
-                Name = farmDTO.name,
-                Address=farmDTO.address
+                Id = farmDTO.Id,
+                Name = farmDTO.Name,
+                Address=farmDTO.Address
             };
             bool i = await _farmRepository.Update(farm);
             if (i == true)
             {
                 return new FarmDTO()
                 {
-                    id = farm.Id,
-                    name = farm.Name,
-                    address=farm.Address
+                    Id = farm.Id,
+                    Name = farm.Name,
+                    Address=farm.Address
                 };
             }
             return null;
@@ -115,7 +95,7 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<List<FarmProductsMappingDTO>> GetProducts(int id)
         {
-            Farm farm = await _farmRepository.GetById(id);
+            Farm? farm = await _farmRepository.GetById(id);
             List<FarmProductsMappingDTO> productdtos = new();
             List<FarmProductsMapping> products1 = await _farmRepository.GetProducts(id);
             foreach(FarmProductsMapping product in products1)
@@ -131,9 +111,9 @@ namespace LocalGoods.BAL.Services.Implementation
                     Description = product.Description,
                     FarmDTO = new FarmDTO()
                     {
-                        id = product.Farm.Id,
-                        address = product.Farm.Address,
-                        name = product.Farm.Name
+                        Id = product.Farm.Id,
+                        Address = product.Farm.Address,
+                        Name = product.Farm.Name
                     },
                     ProductDTO = new ProductDTO()
                     {
@@ -145,15 +125,6 @@ namespace LocalGoods.BAL.Services.Implementation
                 });
             }
             return productdtos;
-            var farm = new Farm()
-            {
-                Id = farmDTO.Id,
-                Name = farmDTO.Name,
-                Address = farmDTO.Address
-            };
-            await _farmRepository.Update(farm);
-            
-            return farmDTO;
         }
     }
 }

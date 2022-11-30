@@ -11,37 +11,40 @@ namespace LocalGoods.Controllers
     [ApiController]
     public class FarmsController : ControllerBase
     {
+        private readonly IFarmerService farmerService;
         private readonly IFarmService farmService;
         private readonly IFarmProductsService farmProductsService;
         private readonly IProductService productService;
 
-        public FarmsController(IFarmService farmService, IFarmProductsService farmProductsService, IProductService productService)
+        public FarmsController(IFarmService farmService, IFarmProductsService farmProductsService, IProductService productService, IFarmerService farmerService)
         {
             this.farmService = farmService;
             this.farmProductsService = farmProductsService;
             this.productService = productService;
+            this.farmerService = farmerService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<CreateFarmDTO>> Create(CreateFarmDTO farmDTO)
+        [HttpPost("{FarmerId}")]
+        public async Task<ActionResult<CreateFarmDTO>> Create(int FarmerId, FarmDTO farmDTO)
         {
             if (farmDTO.Name is null)
                 return BadRequest();
-            FarmDTO? createdFarm = await farmService.Create(farm);
-            if(createdFarm is null)
+            farmDTO.FarmerId = FarmerId;
+            FarmDTO? createdFarm = await farmService.Create(farmDTO);
+            if (createdFarm is null)
             {
                 return BadRequest();
             }
             return Ok(createdFarm);
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FarmDTO>> GetFarm(int? id)
+        [HttpGet]
+        public async Task<ActionResult<List<FarmDTO>>> Get()
         {
-            var farm = await farmService.Create(farmDTO);
-            return Ok(farm);
+            return Ok(await farmService.GetAll());
         }
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<FarmDTO>> GetById(int id)
+        public async Task<ActionResult<FarmDTO>> GetById(int? id)
         {
             if (id == null)
             {
@@ -52,7 +55,6 @@ namespace LocalGoods.Controllers
             {
                 return NotFound();
             }
-            FarmDTO farm = await farmService.Get(id);
             return Ok(farm);
         }
 
@@ -66,11 +68,6 @@ namespace LocalGoods.Controllers
             bool i = await farmService.Delete((int)id);
             return Ok(i);
          }
-        [HttpGet]
-        public async Task<ActionResult<List<FarmDTO>>> GetAll()
-        {
-            return Ok(await farmService.GetAll());
-        }
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id,FarmDTO? farmDTO)
         {
@@ -78,7 +75,7 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest();
             }
-            farmDTO.id = id;
+            farmDTO.Id = id;
             farmDTO = await farmService.Update((FarmDTO)farmDTO);
             if (farmDTO != null)
             {
@@ -143,8 +140,6 @@ namespace LocalGoods.Controllers
         public async Task<ActionResult<bool>> DeleteMapping(int id, AFarmProductDTO productDTO)
         {
             return await farmProductsService.Delete(id);
-            var farm = await farmService.Update(farmDTO);
-            return Ok(farm);
         }
     }
 }

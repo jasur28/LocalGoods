@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#nullable disable
+
 namespace LocalGoods.DAL.Models
 {
     public class FarmProductsMapping
@@ -16,10 +18,11 @@ namespace LocalGoods.DAL.Models
         public int ProductId { get; set; }
         [ForeignKey("Farm")]
         public int FarmId { get; set; }
-        public string? Description { get; set; }
-        public int? Surplus { get; set; }
-        public decimal? Price { get; set; }
-        public virtual Farm? Farm { get; set; }
-        public virtual Product? Product { get; set; }
+        public string Description { get; set; }
+        public int Surplus { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Price { get; set; }
+        public virtual Farm Farm { get; set; }
+        public virtual Product Product { get; set; }
     }
 }
