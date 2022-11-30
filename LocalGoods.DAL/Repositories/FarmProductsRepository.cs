@@ -19,8 +19,21 @@ namespace LocalGoods.DAL.Repositories
             _context = context;
         }
 
-        public async Task<FarmProductsMapping> Create(FarmProductsMapping product)
+        public async Task<FarmProductsMapping?> Create(FarmProductsMapping product)
         {
+            IEnumerable<FarmProductsMapping> farmProductsMappings = await GetAll();
+            bool flag=false;
+            foreach (FarmProductsMapping farmProduct in farmProductsMappings)
+            {
+                if(farmProduct.ProductId.Equals(product.ProductId) && farmProduct.FarmId.Equals(product.FarmId))
+                {
+                    flag=true;
+                }
+            }
+            if(flag)
+            {
+                return null;
+            }
             await _context.FarmProductsMappings.AddAsync(product);
             await _context.SaveChangesAsync();
             return product;

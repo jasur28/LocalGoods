@@ -99,6 +99,10 @@ namespace LocalGoods.Controllers
             FarmProductsMappingDTO? createdMapping = await farmProductsService.Create(farmProductsMapping);
             if (createdMapping != null)
             {
+                if(createdMapping.FarmProductId == 0)
+                {
+                    return NotFound("Product Already Exists in the farm");
+                }
                 return Ok(createdMapping);
             }
             return BadRequest();

@@ -31,16 +31,29 @@ namespace LocalGoods.BAL.Services.Implementation
             };
             try
             {
-                farmProductsMapping = await farmProductsRepository.Create(farmProductsMapping);
+                FarmProductsMapping? farmProductsMapping1 = await farmProductsRepository.Create(farmProductsMapping);
+                if(farmProductsMapping1 == null)
+                {
+                    return new FarmProductsMappingDTO()
+                    {
+                        FarmProductId = 0,
+                        FarmId = productDTO.FarmId,
+                        Price = productDTO.Price,
+                        Description = productDTO.Description,
+                        Surplus = productDTO.Surplus,
+                        ProductId = productDTO.ProductId
+                    };
+                }
                 return new FarmProductsMappingDTO()
                 {
-                    FarmProductId = productDTO.ProductId,
-                    FarmId = productDTO.FarmId,
-                    Price = productDTO.Price,
-                    Description = productDTO.Description,
-                    Surplus = productDTO.Surplus,
-                    ProductId = productDTO.ProductId
+                    FarmProductId = farmProductsMapping1.ProductId,
+                    FarmId = farmProductsMapping1.FarmId,
+                    Price = farmProductsMapping1.Price,
+                    Description = farmProductsMapping1.Description,
+                    Surplus = farmProductsMapping1.Surplus,
+                    ProductId = farmProductsMapping1.ProductId
                 };
+               
             }
             catch(Exception)
             {
