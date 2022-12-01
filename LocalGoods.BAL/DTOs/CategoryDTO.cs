@@ -10,14 +10,11 @@ using System.Threading.Tasks;
 
 namespace LocalGoods.BAL.DTOs
 {
-    public class ProductDTO
+    public class CategoryDTO
     {
-        [SwaggerSchema(ReadOnly =true)]
+        [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string ImageUrl { get; set; }
-        public int CategoryId { get; set; }
-        public QuantityTypes QuantityType { get; set; }
-
+        public string Description { get; set; }
     }
 }

@@ -105,10 +105,11 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     ProductId = product.ProductId,
                     FarmId = product.FarmId,
-                    FarmProductId = product.FarmProductId,
+                    Id = product.Id,
                     Price = product.Price,
                     Surplus = product.Surplus,
                     Description = product.Description,
+                    
                     FarmDTO = new FarmDTO()
                     {
                         Id = product.Farm.Id,

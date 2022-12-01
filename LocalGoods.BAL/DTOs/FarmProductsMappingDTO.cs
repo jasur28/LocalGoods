@@ -17,7 +17,7 @@ namespace LocalGoods.BAL.DTOs
     public class FarmProductsMappingDTO
     {
         [SwaggerSchema(ReadOnly =true)]
-        public int FarmProductId { get; set; }
+        public int Id { get; set; }
         [SwaggerSchema(ReadOnly =true)]
         public int ProductId { get; set; }
         [SwaggerSchema(ReadOnly =true)]
