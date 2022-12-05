@@ -24,6 +24,7 @@ namespace LocalGoods.BAL.Services.Implementation
             Product product = new()
             {
                 Name = productDTO.Name,
+                CategoryId = productDTO.CategoryId,
                 ImageUrl = productDTO.ImageUrl,
                 QuantityType = productDTO.QuantityType,
             };
@@ -32,6 +33,7 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Name = product.Name,
                 Id = product.Id,
+                CategoryId = product.CategoryId,
                 ImageUrl = product.ImageUrl,
                 QuantityType=product.QuantityType,
             };
@@ -46,6 +48,7 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     Id = product.Id,
                     Name=product.Name,
+                    CategoryId=product.CategoryId,
                     ImageUrl=product.ImageUrl,
                     QuantityType=product.QuantityType
                 };
@@ -64,6 +67,7 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                    Id=product.Id,
                    Name=product.Name,
+                   CategoryId=product.CategoryId,
                    ImageUrl = product.ImageUrl,
                    QuantityType = product.QuantityType
                 };
@@ -83,6 +87,7 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Id = productDTO.Id,
                 Name = productDTO.Name,
+                CategoryId = productDTO.CategoryId,
                 ImageUrl=productDTO.ImageUrl,
                 QuantityType=productDTO.QuantityType
             };
@@ -93,8 +98,9 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     Id=product.Id,
                     Name=product.Name,
+                    CategoryId=product.CategoryId,
                     ImageUrl = product.ImageUrl,
-                    QuantityType = product.QuantityType 
+                    QuantityType = product.QuantityType
                 };
             }
             return null;

@@ -36,22 +36,22 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     return new FarmProductsMappingDTO()
                     {
-                        FarmProductId = 0,
+                        Id = 0,
                         FarmId = productDTO.FarmId,
                         Price = productDTO.Price,
                         Description = productDTO.Description,
                         Surplus = productDTO.Surplus,
-                        ProductId = productDTO.ProductId
+                        ProductId = productDTO.ProductId,
                     };
                 }
                 return new FarmProductsMappingDTO()
                 {
-                    FarmProductId = farmProductsMapping1.ProductId,
+                    Id = farmProductsMapping1.Id,
                     FarmId = farmProductsMapping1.FarmId,
                     Price = farmProductsMapping1.Price,
                     Description = farmProductsMapping1.Description,
                     Surplus = farmProductsMapping1.Surplus,
-                    ProductId = farmProductsMapping1.ProductId
+                    ProductId = farmProductsMapping1.ProductId,
                 };
                
             }
@@ -68,12 +68,12 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 return new FarmProductsMappingDTO()
                 {
-                    FarmProductId = product.ProductId,
+                    Id = product.Id,
                     FarmId = product.FarmId,
                     Price = product.Price,
                     Description = product.Description,
                     Surplus = product.Surplus,
-                    ProductId = product.ProductId
+                    ProductId = product.ProductId,
                 };
             }
             return null;
@@ -87,12 +87,12 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 dTOs.Add(new FarmProductsMappingDTO()
                 {
-                    FarmProductId = mapping.FarmProductId,
+                    Id = mapping.Id,
                     FarmId = mapping.FarmId,
                     Price = mapping.Price,
                     Description = mapping.Description,
                     Surplus = mapping.Surplus,
-                    ProductId = mapping.ProductId
+                    ProductId = mapping.ProductId,
                 });
             }
             return dTOs;
@@ -107,7 +107,7 @@ namespace LocalGoods.BAL.Services.Implementation
         { 
             FarmProductsMapping mapping = new()
             {
-                FarmProductId = productDTO.FarmProductId,
+                Id = productDTO.Id,
                 Price = productDTO.Price,
                 Description = productDTO.Description,
                 Surplus = productDTO.Surplus,
@@ -117,7 +117,7 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 return new()
                 {
-                    FarmProductId = productDTO.FarmProductId,
+                    Id = productDTO.Id,
                     Price = productDTO.Price,
                     Description = productDTO.Description,
                     Surplus = productDTO.Surplus,

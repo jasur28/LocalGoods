@@ -15,5 +15,6 @@ namespace LocalGoods.DAL.Data
         public DbSet<Farmer> Farmers { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<FarmProductsMapping> FarmProductsMappings { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
     }
 }
