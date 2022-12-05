@@ -5,25 +5,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LocalGoods.DAL.Repositories
 {
-    public class FarmerRepository : IFarmerRepository
+    public class UserRepository : IUserRepository
     {
         private readonly LocalGoodsDbContext _context;
 
-        public FarmerRepository(LocalGoodsDbContext context)
+        public UserRepository(LocalGoodsDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Farmer> Create(Farmer item)
+        public async Task<User> Create(User item)
         {
-            await _context.Farmers.AddAsync(item);
+            await _context.Users.AddAsync(item);
             await _context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<bool> Delete(Farmer item)
+        public async Task<bool> Delete(User item)
         {
-            _context.Farmers.Remove(item);
+            _context.Users.Remove(item);
             try
             {
                 await _context.SaveChangesAsync();
@@ -35,30 +35,30 @@ namespace LocalGoods.DAL.Repositories
             }
         }
 
-        public async Task<IEnumerable<Farmer>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Farmers.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
-        public async Task<Farmer?> GetById(int id)
+        public async Task<User?> GetById(int id)
         {
-            return await _context.Farmers.SingleOrDefaultAsync(x=>x.Id==id);
+            return await _context.Users.SingleOrDefaultAsync(x=>x.Id==id);
         }
 
-        public async Task<Farmer> Update(Farmer item)
+        public async Task<User> Update(User item)
         {
-            _context.Farmers.Update(item);
+            _context.Users.Update(item);
             await _context.SaveChangesAsync();
             return item;
         }
         public async Task<List<Farm>> GetFarms(int id)
         {
-            Farmer? farmer = await GetById(id);
-            if(farmer==null || farmer.Farms is null)
+            User? user = await GetById(id);
+            if(user==null)
             {
                 return new List<Farm>();
             }
-            return farmer.Farms.ToList();
+            return null;
         }
     }
 }

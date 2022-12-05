@@ -15,20 +15,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<LocalGoodsDbContext>(
-    options => options.UseLazyLoadingProxies().
-    UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Added Scoped
 builder.Services.AddScoped<IFarmRepository, FarmRepository>();
 builder.Services.AddScoped<IFarmService, FarmService>();
-builder.Services.AddScoped<IFarmerService, FarmerService>();
-builder.Services.AddScoped<IFarmerRepository, FarmerRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IFarmProductsRepository, FarmProductsRepository>();
-builder.Services.AddScoped<IFarmProductsService, FarmProductsService>();    
+builder.Services.AddScoped<IProductService, ProductService>();  
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IQuantityTypeRepository, QuantityTypeRepository>();
+builder.Services.AddScoped<IQuantityTypeService, QuantityTypeService>();
 
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler= ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

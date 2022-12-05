@@ -103,8 +103,8 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     Id= product.Id,
                     Name= product.Name,
-                    ImageUrl= product.ImageUrl,
-                    QuantityType= product.QuantityType,
+                    Image= product.Image,
+                    QuantityTypeId= product.QuantityTypeId,
                 });
             }
             return productsDTOs;

@@ -9,6 +9,6 @@ namespace LocalGoods.DAL.Interfaces
         public Task<bool> Update(Farm item);
         public Task<IEnumerable<Farm>> GetAll();
         public Task<Farm?> GetById(int id);
-        public Task<List<FarmProductsMapping>> GetProducts(int id);
+        public Task<List<Product>> GetProducts(int id);
     }
 }

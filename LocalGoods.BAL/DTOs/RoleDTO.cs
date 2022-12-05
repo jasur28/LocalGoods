@@ -1,21 +1,19 @@
-﻿using System;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#nullable disable
-
-namespace LocalGoods.DAL.Models
+namespace LocalGoods.BAL.DTOs
 {
-    public class Category
+    public class RoleDTO
     {
+#nullable disable
+        [SwaggerSchema(ReadOnly =true)]
         public int Id { get; set; }
-        [MinLength(5)]
         [Required]
         public string Name { get; set; }
-        public string Description { get; set; }
-        public ICollection<Product> Products { get; set; }
     }
 }
