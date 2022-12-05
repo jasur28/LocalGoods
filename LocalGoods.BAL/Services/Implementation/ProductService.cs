@@ -25,8 +25,10 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Name = productDTO.Name,
                 CategoryId = productDTO.CategoryId,
-                ImageUrl = productDTO.ImageUrl,
-                QuantityType = productDTO.QuantityType,
+                Image = productDTO.Image,
+                QuantityTypeId = productDTO.QuantityTypeId,
+                Description = productDTO.Description,
+                FarmId = productDTO.FarmId,
             };
             product=await productRepository.Create(product);
             productDTO = new()
@@ -34,8 +36,9 @@ namespace LocalGoods.BAL.Services.Implementation
                 Name = product.Name,
                 Id = product.Id,
                 CategoryId = product.CategoryId,
-                ImageUrl = product.ImageUrl,
-                QuantityType=product.QuantityType,
+                Image = product.Image,
+                QuantityTypeId=product.QuantityTypeId,
+                Description=product.Description
             };
             return productDTO;
         }
@@ -49,8 +52,8 @@ namespace LocalGoods.BAL.Services.Implementation
                     Id = product.Id,
                     Name=product.Name,
                     CategoryId=product.CategoryId,
-                    ImageUrl=product.ImageUrl,
-                    QuantityType=product.QuantityType
+                    Image=product.Image,
+                    QuantityTypeId=product.QuantityTypeId
                 };
                 return productDTO;
             }
@@ -68,8 +71,8 @@ namespace LocalGoods.BAL.Services.Implementation
                    Id=product.Id,
                    Name=product.Name,
                    CategoryId=product.CategoryId,
-                   ImageUrl = product.ImageUrl,
-                   QuantityType = product.QuantityType
+                   Image = product.Image,
+                   QuantityTypeId = product.QuantityTypeId
                 };
                 productDTOs.Add(productDTO);
             }
@@ -88,8 +91,8 @@ namespace LocalGoods.BAL.Services.Implementation
                 Id = productDTO.Id,
                 Name = productDTO.Name,
                 CategoryId = productDTO.CategoryId,
-                ImageUrl=productDTO.ImageUrl,
-                QuantityType=productDTO.QuantityType
+                Image=productDTO.Image,
+                QuantityTypeId=productDTO.QuantityTypeId
             };
             bool i=await productRepository.Update(product);
             if(i == true)
@@ -99,8 +102,8 @@ namespace LocalGoods.BAL.Services.Implementation
                     Id=product.Id,
                     Name=product.Name,
                     CategoryId=product.CategoryId,
-                    ImageUrl = product.ImageUrl,
-                    QuantityType = product.QuantityType
+                    Image = product.Image,
+                    QuantityTypeId = product.QuantityTypeId
                 };
             }
             return null;

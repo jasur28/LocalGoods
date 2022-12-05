@@ -27,6 +27,6 @@ namespace LocalGoods.BAL.DTOs
         public int Surplus { get; set; }
         [SwaggerSchema(ReadOnly = true)]
         [JsonIgnore(Condition=JsonIgnoreCondition.Always)]
-        public QuantityTypes QuantityType { get; set; }
+        public int QuantityTypeId { get; set; }
     }
 }

@@ -10,40 +10,40 @@ using System.Threading.Tasks;
 
 namespace LocalGoods.DAL.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    public class RoleRepository : IRoleRepository
     {
         private readonly LocalGoodsDbContext _context;
 
-        public CategoryRepository(LocalGoodsDbContext context)
+        public RoleRepository(LocalGoodsDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Category> Create(Category category)
+        public async Task<Role> Create(Role Role)
         {
-            await _context.Categories.AddAsync(category);
+            await _context.Roles.AddAsync(Role);
             await _context.SaveChangesAsync();
-            return category;
+            return Role;
         }
 
-        public async Task<IEnumerable<Category>> GetAll()
+        public async Task<IEnumerable<Role>> GetAll()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Roles.ToListAsync();
         }
 
-        public async Task<Category?> GetById(int id)
+        public async Task<Role?> GetById(int id)
         {
-            return await _context.Categories.FindAsync(id);
+            return await _context.Roles.FindAsync(id);
         }
 
         public async Task<bool> Delete(int id)
         {
-            Category? category = await GetById(id);
-            if (category != null)
+            Role? Role = await GetById(id);
+            if (Role != null)
             {
                 try
                 {
-                    _context.Categories.Remove(category);
+                    _context.Roles.Remove(Role);
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -58,11 +58,11 @@ namespace LocalGoods.DAL.Repositories
             }
         }
 
-        public async Task<bool> Update(Category category)
+        public async Task<bool> Update(Role Role)
         {
             try
             {
-                _context.Entry(category).State = EntityState.Modified;
+                _context.Entry(Role).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -70,12 +70,6 @@ namespace LocalGoods.DAL.Repositories
             {
                 return false;
             }
-        }
-        public async Task<IEnumerable<Product>> GetCategoryProducts(int id)
-        {
-            Category? category = await GetById(id);
-           
-                return new List<Product>();
         }
     }
 }

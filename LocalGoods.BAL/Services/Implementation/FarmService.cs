@@ -20,7 +20,15 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Name = farmDTO.Name,
                 Address = farmDTO.Address,
-                FarmerId= farmDTO.FarmerId
+                UserId= farmDTO.UserId,
+                Email = farmDTO.Email,
+                City = farmDTO.City,
+                Longitude = farmDTO.Longitude,
+                Latitude = farmDTO.Latitude,
+                Country = farmDTO.Country,
+                Telephone = farmDTO.Telephone,
+                Instagram = farmDTO.Instagram,
+                FaceBook=farmDTO.FaceBook
             };
             farm = await _farmRepository.Create(farm);
             if (farm is null)
@@ -44,7 +52,7 @@ namespace LocalGoods.BAL.Services.Implementation
                 Id = farm.Id,
                 Name = farm.Name,
                 Address = farm.Address,
-                FarmerId=farm.FarmerId
+                UserId=farm.UserId
             };
             return farmDTO; 
         }
@@ -60,7 +68,7 @@ namespace LocalGoods.BAL.Services.Implementation
                     Id = farm.Id,
                     Name = farm.Name,
                     Address = farm.Address,
-                    FarmerId=farm.FarmerId
+                    UserId=farm.UserId
                 };
                 farmDTOs.Add(farmDTO);
             }
@@ -93,36 +101,21 @@ namespace LocalGoods.BAL.Services.Implementation
             return null;
         }
 
-        public async Task<List<FarmProductsMappingDTO>> GetProducts(int id)
+        public async Task<List<ProductDTO>> GetProducts(int id)
         {
             Farm? farm = await _farmRepository.GetById(id);
-            List<FarmProductsMappingDTO> productdtos = new();
-            List<FarmProductsMapping> products1 = await _farmRepository.GetProducts(id);
-            foreach(FarmProductsMapping product in products1)
+            List<ProductDTO> productdtos = new();
+            List<Product> products1 = await _farmRepository.GetProducts(id);
+            foreach(Product product in products1)
             {
                 int? fid = product.FarmId;
-                productdtos.Add(new FarmProductsMappingDTO()
+                productdtos.Add(new ProductDTO()
                 {
-                    ProductId = product.ProductId,
-                    FarmId = product.FarmId,
                     Id = product.Id,
+                    FarmId = product.FarmId,
                     Price = product.Price,
                     Surplus = product.Surplus,
-                    Description = product.Description,
-                    
-                    FarmDTO = new FarmDTO()
-                    {
-                        Id = product.Farm.Id,
-                        Address = product.Farm.Address,
-                        Name = product.Farm.Name
-                    },
-                    ProductDTO = new ProductDTO()
-                    {
-                        Id = product.Product.Id,
-                        Name = product.Product.Name,
-                        ImageUrl = product.Product.ImageUrl,
-                        QuantityType = product.Product.QuantityType
-                    }
+                    Description = product.Description,                    
                 });
             }
             return productdtos;

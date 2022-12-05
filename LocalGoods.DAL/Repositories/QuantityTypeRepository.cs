@@ -10,40 +10,40 @@ using System.Threading.Tasks;
 
 namespace LocalGoods.DAL.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    public class QuantityTypeRepository : IQuantityTypeRepository
     {
         private readonly LocalGoodsDbContext _context;
 
-        public CategoryRepository(LocalGoodsDbContext context)
+        public QuantityTypeRepository(LocalGoodsDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Category> Create(Category category)
+        public async Task<QuantityType> Create(QuantityType QuantityType)
         {
-            await _context.Categories.AddAsync(category);
+            await _context.QuantityTypes.AddAsync(QuantityType);
             await _context.SaveChangesAsync();
-            return category;
+            return QuantityType;
         }
 
-        public async Task<IEnumerable<Category>> GetAll()
+        public async Task<IEnumerable<QuantityType>> GetAll()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.QuantityTypes.ToListAsync();
         }
 
-        public async Task<Category?> GetById(int id)
+        public async Task<QuantityType?> GetById(int id)
         {
-            return await _context.Categories.FindAsync(id);
+            return await _context.QuantityTypes.FindAsync(id);
         }
 
         public async Task<bool> Delete(int id)
         {
-            Category? category = await GetById(id);
-            if (category != null)
+            QuantityType? QuantityType = await GetById(id);
+            if (QuantityType != null)
             {
                 try
                 {
-                    _context.Categories.Remove(category);
+                    _context.QuantityTypes.Remove(QuantityType);
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -58,11 +58,11 @@ namespace LocalGoods.DAL.Repositories
             }
         }
 
-        public async Task<bool> Update(Category category)
+        public async Task<bool> Update(QuantityType QuantityType)
         {
             try
             {
-                _context.Entry(category).State = EntityState.Modified;
+                _context.Entry(QuantityType).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -70,12 +70,6 @@ namespace LocalGoods.DAL.Repositories
             {
                 return false;
             }
-        }
-        public async Task<IEnumerable<Product>> GetCategoryProducts(int id)
-        {
-            Category? category = await GetById(id);
-           
-                return new List<Product>();
         }
     }
 }

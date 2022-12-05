@@ -67,14 +67,10 @@ namespace LocalGoods.DAL.Operations
             }
         }
 
-        public async Task<List<FarmProductsMapping>> GetProducts(int id)
+        public async Task<List<Product>> GetProducts(int id)
         {
-            Farm? farm= await GetById(id);
-            if(farm is null || farm.FarmProductMappings is null)
-            {
-                return new List<FarmProductsMapping>() ;
-            }
-            return farm.FarmProductMappings.ToList();
+            List<Product> products = await _context.Products.ToListAsync();
+            return products.FindAll(x => x.FarmId == id);
         }
     }
 }
