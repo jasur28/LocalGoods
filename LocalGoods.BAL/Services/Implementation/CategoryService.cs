@@ -68,12 +68,12 @@ namespace LocalGoods.BAL.Services.Implementation
             return categoryDTOs;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             return await categoryRepository.Delete(id);
         }
 
-        public async Task<CategoryDTO?> Update(CategoryDTO categoryDTO)
+        public async Task<(CategoryDTO,int)> Update(CategoryDTO categoryDTO)
         {
             Category category = new()
             {
@@ -81,21 +81,12 @@ namespace LocalGoods.BAL.Services.Implementation
                 Name = categoryDTO.Name,
                 Description = categoryDTO.Description,
             };
-            bool i = await categoryRepository.Update(category);
-            if (i == true)
-            {
-                return new CategoryDTO()
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    Description= category.Description,
-                };
-            }
-            return null;
+            int i = await categoryRepository.Update(category);
+            return (categoryDTO,i);
         }
-        public async Task<IEnumerable<ProductDTO>> GetCategoryProducts(int id)
+        public async Task<(IEnumerable<ProductDTO>,int)> GetCategoryProducts(int id)
         {
-            IEnumerable<Product> products = await categoryRepository.GetCategoryProducts(id);
+            (IEnumerable<Product> products,int a) = await categoryRepository.GetCategoryProducts(id);
             List<ProductDTO> productsDTOs = new();
             foreach(Product product in products)
             {
@@ -103,11 +94,11 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     Id= product.Id,
                     Name= product.Name,
-                    ImageUrl= product.ImageUrl,
-                    QuantityType= product.QuantityType,
+                    Image= product.Image,
+                    QuantityTypeId= product.QuantityTypeId,
                 });
             }
-            return productsDTOs;
+            return (productsDTOs,a);
         }
     }
 }

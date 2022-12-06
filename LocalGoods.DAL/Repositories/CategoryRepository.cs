@@ -36,7 +36,7 @@ namespace LocalGoods.DAL.Repositories
             return await _context.Categories.FindAsync(id);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             Category? category = await GetById(id);
             if (category != null)
@@ -45,40 +45,66 @@ namespace LocalGoods.DAL.Repositories
                 {
                     _context.Categories.Remove(category);
                     await _context.SaveChangesAsync();
-                    return true;
+                    return 1;
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return 2;
                 }
             }
             else
             {
-                return false;
+                return 0;
             }
         }
 
-        public async Task<bool> Update(Category category)
+        public async Task<int> Update(Category category)
         {
             try
             {
-                _context.Entry(category).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return true;
+                Category? category1 = await GetById(category.Id);
+                if(category1 != null)
+                {
+                    try
+                    {
+                        _context.Entry(category1).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                        return 1;
+                    }
+                    catch(Exception)
+                    {
+                        return 2;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            catch (Exception)
+            catch(Exception)
             {
-                return false;
+                return 2;
             }
         }
-        public async Task<IEnumerable<Product>> GetCategoryProducts(int id)
+        public async Task<(IEnumerable<Product>,int)> GetCategoryProducts(int id)
         {
-            Category? category = await GetById(id);
-            if(category is null || category.Products is null)
+            try
             {
-                return new List<Product>();
+                Category? category = await GetById(id);
+                if (category != null)
+                {
+                    if(category.Products != null)
+                    {
+                        return (category.Products.ToList(), 1);
+                    }
+                    return (new List<Product>(), 1);
+                }
+                return (new List<Product>(), 0);
             }
-            return category.Products;
+            catch(Exception)
+            {
+                return (new List<Product>(), 0);
+            }
         }
     }
 }

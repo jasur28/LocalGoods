@@ -12,31 +12,38 @@ namespace LocalGoods.Controllers
     [ApiController]
     public class FarmsController : ControllerBase
     {
-        private readonly IFarmerService farmerService;
+        private readonly IUserService farmerService;
         private readonly IFarmService farmService;
-        private readonly IFarmProductsService farmProductsService;
         private readonly IProductService productService;
 
-        public FarmsController(IFarmService farmService, IFarmProductsService farmProductsService, IProductService productService, IFarmerService farmerService)
+        public FarmsController(IFarmService farmService,IProductService productService, IUserService farmerService)
         {
             this.farmService = farmService;
-            this.farmProductsService = farmProductsService;
             this.productService = productService;
             this.farmerService = farmerService;
         }
 
-        [HttpPost("{FarmerId}")]
-        public async Task<ActionResult<CreateFarmDTO>> Create(int FarmerId, FarmDTO farmDTO)
+        [HttpPost("{UserId}")]
+        public async Task<ActionResult<FarmDTO>> Create(int UserId, FarmDTO farmDTO)
         {
-            if (farmDTO.Name is null)
-                return BadRequest();
-            farmDTO.FarmerId = FarmerId;
-            FarmDTO? createdFarm = await farmService.Create(farmDTO);
-            if (createdFarm is null)
+            farmDTO.UserId = UserId;
+            (FarmDTO createdFarm,int i) = await farmService.Create(farmDTO);
+            if(i==0)
+            {
+                return NotFound("User Not Found");
+            }
+            else if(i==1)
+            {
+                return Ok(createdFarm);
+            }
+            else if(i==2)
+            {
+                return StatusCode(501);
+            }
+            else
             {
                 return BadRequest();
             }
-            return Ok(createdFarm);
         }
         [HttpGet]
         public async Task<ActionResult<List<FarmDTO>>> Get()
@@ -45,12 +52,8 @@ namespace LocalGoods.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FarmDTO>> GetById(int? id)
+        public async Task<ActionResult<FarmDTO>> GetById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
             FarmDTO? farm = await farmService.Get((int)id);
             if(farm is null)
             {
@@ -60,91 +63,56 @@ namespace LocalGoods.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> Delete(int? id)
+        public async Task<ActionResult<int>> Delete(int id)
         {
-            if (id == null)
+            int i = await farmService.Delete((int)id);
+            if(i==1)
             {
-                return BadRequest();
+                return Ok("Deleted Successfully");
             }
-            bool i = await farmService.Delete((int)id);
-            return Ok(i);
-         }
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id,FarmDTO? farmDTO)
-        {
-            if (farmDTO is null)
+            else if(i==0)
             {
-                return BadRequest();
-            }
-            farmDTO.Id = id;
-            farmDTO = await farmService.Update((FarmDTO)farmDTO);
-            if (farmDTO != null)
-            {
-                return Ok(farmDTO);
-            }
-            return BadRequest();
-        }
-        [HttpPost("{FarmId}/Products/{id}")]
-        public async Task<ActionResult<FarmProductsMappingDTO?>> CreateMapping(int FarmId, int id, AFarmProductDTO mappingDTO)
-        {
-            if (mappingDTO is null)
-                return BadRequest();
-            FarmProductsMappingDTO farmProductsMapping = new()
-            {
-                ProductId = id,
-                FarmId = FarmId,
-                Price = mappingDTO.Price,
-                Description = mappingDTO.Description,
-                Surplus = mappingDTO.Surplus
-            };
-            FarmProductsMappingDTO? createdMapping = await farmProductsService.Create(farmProductsMapping);
-            if (createdMapping != null)
-            {
-                if(createdMapping.Id == 0)
-                {
-                    return NotFound("Product Already Exists in the farm");
-                }
-                return Ok(createdMapping);
-            }
-            return BadRequest();
-        }
-
-        [HttpGet("{FarmId}/Products")]
-        public async Task<ActionResult<List<FarmProductsMappingDTO>>> GetProducts(int FarmId)
-        {
-            List<FarmProductsMappingDTO> products = await farmService.GetProducts(FarmId);
-            return Ok(products);
-        }
-        [HttpGet("Products/{id}")]
-        public async Task<ActionResult<FarmProductsMappingDTO?>> GetFarmProduct(int id)
-        {
-            FarmProductsMappingDTO? product = await farmProductsService.Get(id);
-            if(product==null)
                 return NotFound();
-            return Ok(product);
-        }
-       
-        [HttpPut("Products/{id}")]
-        public async Task<ActionResult<FarmProductsMappingDTO>> EditProduct(int id, AFarmProductDTO productDTO)
-        {
-            if (productDTO is null)
-                return BadRequest();
-            FarmProductsMappingDTO farmProductsMappingDTO = new()
+            }
+            else if(i==2)
             {
-                Id = id,
-                Price = productDTO.Price,
-                Surplus = productDTO.Surplus,
-                Description=productDTO.Description,
-            };
-            FarmProductsMappingDTO? editedMapping = await farmProductsService.Update(farmProductsMappingDTO);
-            if(editedMapping!=null)
-                return Ok(editedMapping);
-            return NotFound();
-        }
-        [HttpDelete("Products/{id}")]
-        public async Task<ActionResult<bool>> DeleteMapping(int id, AFarmProductDTO productDTO)
+                return StatusCode(501);
+            }
+            return BadRequest();
+         }
+        //Under development
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> Update(int id,FarmDTO farmDTO)
+        //{
+        //    farmDTO.Id = id;
+        //    (farmDTO,int i) = await farmService.Update(farmDTO);
+        //    if(i==1)
+        //    {
+        //        return Ok(farmDTO);
+        //    }
+        //    else if(i==0)
+        //    {
+        //        return NotFound("Farm Not Found");
+        //    }
+        //    else if(i==2)
+        //    {
+        //        return StatusCode(501);
+        //    }
+        //    return BadRequest();
+        //}
+        [HttpGet("{id}/FarmProducts")]
+        public async Task<ActionResult> FarmProducts(int id)
         {
-            return await farmProductsService.Delete(id);
+            (List<ProductDTO> products, int i) = await farmService.GetProducts(id);
+            if(i==0)
+            {
+                return NotFound("Farm Not Found");
+            }
+            else if(i==1)
+            {
+                return Ok(products);
+            }
+            return Ok(products);
         }
     }
 }

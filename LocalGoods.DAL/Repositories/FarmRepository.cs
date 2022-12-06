@@ -14,11 +14,20 @@ namespace LocalGoods.DAL.Operations
             _context = context;
         }
 
-        public async Task<Farm> Create(Farm item)
+        public async Task<(Farm,bool)> Create(Farm item)
         {
-            await _context.Farms.AddAsync(item);
-            await _context.SaveChangesAsync();
-            return item;
+            
+                try
+                {
+                    await _context.Farms.AddAsync(item);
+                    await _context.SaveChangesAsync();
+                    return (item, true);
+                }
+                catch (Exception)
+                {
+                    return (item, false);
+                }
+           
         }
 
         public async Task<IEnumerable<Farm>> GetAll()
@@ -31,7 +40,7 @@ namespace LocalGoods.DAL.Operations
             return await _context.Farms.FindAsync(id);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             Farm? farm = await GetById(id);
             if (farm != null)
@@ -40,41 +49,54 @@ namespace LocalGoods.DAL.Operations
                 {
                     _context.Farms.Remove(farm);
                     await _context.SaveChangesAsync();
-                    return true;
+                    return 1;
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return 2;
                 }
             }
             else
             {
-                return false;
+                return 0;
             }
         }
-
-        public async Task<bool> Update(Farm farm)
+        //Under development
+        public async Task<int> Update(Farm farm)
         {
             try
             {
-                _context.Entry(farm).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return true;
+                Farm? farm1= await GetById(farm.Id);
+                if (farm1 != null)
+                {
+                    try
+                    {
+                        var entry = _context.Entry(farm);
+                        entry.State = EntityState.Modified;
+                       // entry.Property("UserId").IsModified = false;
+                        await _context.SaveChangesAsync();
+                        return 1;
+                    }
+                    catch(Exception)
+                    {
+                        return 2;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
             }
             catch (Exception)
             {
-                return false;
+                return 2;
             }
         }
 
-        public async Task<List<FarmProductsMapping>> GetProducts(int id)
+        public async Task<List<Product>> GetProducts(int id)
         {
-            Farm? farm= await GetById(id);
-            if(farm is null || farm.FarmProductMappings is null)
-            {
-                return new List<FarmProductsMapping>() ;
-            }
-            return farm.FarmProductMappings.ToList();
+            List<Product> products = await _context.Products.ToListAsync();
+            return products.FindAll(x => x.FarmId == id);
         }
     }
 }

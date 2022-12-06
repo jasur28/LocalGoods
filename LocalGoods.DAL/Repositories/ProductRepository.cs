@@ -19,11 +19,19 @@ namespace LocalGoods.DAL.Repositories
             _context = context;
         }
 
-        public async Task<Product> Create(Product product)
+        public async Task<(Product,bool)> Create(Product product)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
-            return product;
+           
+                try
+                {
+                    await _context.Products.AddAsync(product);
+                    await _context.SaveChangesAsync();
+                    return (product, true);
+                }
+                catch (Exception)
+                {
+                    return (product, false);
+                }
         }
 
         public async Task<IEnumerable<Product>> GetAll()
@@ -36,7 +44,7 @@ namespace LocalGoods.DAL.Repositories
             return await _context.Products.FindAsync(id);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             Product? product = await GetById(id);
             if(product != null)
@@ -45,30 +53,46 @@ namespace LocalGoods.DAL.Repositories
                 {
                     _context.Products.Remove(product);
                     await _context.SaveChangesAsync();
-                    return true;
+                    return 1;
                 }
                 catch(Exception)
                 {
-                    return false;
+                    return 2;
                 }                
             }
             else
             {
-                return false;
+                return 0;
             }
         }
 
-        public async Task<bool> Update(Product product)
+        public async Task<int> Update(Product product)
         {
             try
             {
-                _context.Entry(product).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return true;
+                Product? product1 = await GetById(product.Id);
+                if (product1 != null)
+                {
+                    try
+                    {
+                        _context.Entry(product1).State = EntityState.Modified;
+                      //  _context.Entry(product1).Property("FarmId").IsModified = false;
+                        await _context.SaveChangesAsync();
+                        return 1;
+                    }
+                    catch (Exception)
+                    {
+                        return 2;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return false;
+                return 2;
             }
         }
     }

@@ -9,10 +9,10 @@ namespace LocalGoods.BAL.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<ProductDTO> Create(ProductDTO product);
+        Task<(ProductDTO,int)> Create(ProductDTO product);
         Task<ProductDTO?> Get(int id);
-        Task<ProductDTO?> Update(ProductDTO product);
-        Task<bool> Delete(int id);
+        Task<(ProductDTO,int)> Update(ProductDTO product);
+        Task<int> Delete(int id);
         Task<List<ProductDTO>> GetAll();
     }
 }
