@@ -7,6 +7,7 @@ using NuGet.Protocol;
 
 namespace LocalGoods.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class FarmsController : ControllerBase
