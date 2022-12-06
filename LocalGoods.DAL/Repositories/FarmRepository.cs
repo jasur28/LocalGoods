@@ -31,7 +31,7 @@ namespace LocalGoods.DAL.Operations
             return await _context.Farms.FindAsync(id);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             Farm? farm = await GetById(id);
             if (farm != null)
@@ -40,16 +40,16 @@ namespace LocalGoods.DAL.Operations
                 {
                     _context.Farms.Remove(farm);
                     await _context.SaveChangesAsync();
-                    return true;
+                    return 1;
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return 2;
                 }
             }
             else
             {
-                return false;
+                return 0;
             }
         }
 
