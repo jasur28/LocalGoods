@@ -1,6 +1,23 @@
+
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+namespace LocalGoods.DAL.Models
+{
+    public class User :IdentityUser
+    {
+        
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
 
 #nullable disable
 
@@ -23,5 +40,6 @@ namespace LocalGoods.DAL.Models
         public string Instagram { get; set; }
         public ICollection<Farm> Farms { get; set; }
         public Role Role { get; set; }
+
     }
 }

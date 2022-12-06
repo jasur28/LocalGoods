@@ -10,12 +10,49 @@ using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.DAL.Repositories;
 using System.Text.Json.Serialization;
+using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<LocalGoodsDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Add Identity
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<LocalGoodsDbContext>()
+    .AddDefaultTokenProviders();
+
+//Add Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    //Add jwt bearer
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:Secret"])),
+
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+
+            ValidateAudience =true,
+            ValidAudience = builder.Configuration["JWT:Audience"]
+        };
+    });
+
+
 
 //Added Scoped
 builder.Services.AddScoped<IFarmRepository, FarmRepository>();
@@ -50,7 +87,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+//Seed the Database
+AppDbInitializer.SeedRolesToDb(app).Wait();
 
 app.MapControllers();
 
