@@ -2,6 +2,8 @@
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
+using LocalGoods.DAL.Operations;
+using LocalGoods.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,34 +15,39 @@ namespace LocalGoods.BAL.Services.Implementation
     public class ProductService : IProductService
     {
         private readonly IProductRepository productRepository;
+        private readonly IFarmRepository farmRepository;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IFarmRepository farmRepository)
         {
             this.productRepository=productRepository;
+            this.farmRepository=farmRepository;
         }
 
-        public async Task<ProductDTO> Create(ProductDTO productDTO)
+        public async Task<(ProductDTO,int)> Create(ProductDTO productDTO)
         {
-            Product product = new()
+            Product? product = new Product()
             {
                 Name = productDTO.Name,
-                CategoryId = productDTO.CategoryId,
+                Price = productDTO.Price,
+                Surplus = productDTO.Surplus,
+                Description = productDTO.Description,   
                 Image = productDTO.Image,
-                QuantityTypeId = productDTO.QuantityTypeId,
-                Description = productDTO.Description,
-                FarmId = productDTO.FarmId,
+                CategoryId=productDTO.CategoryId,
+                QuantityTypeId=productDTO.QuantityTypeId,
+                FarmId=productDTO.FarmId
             };
-            product=await productRepository.Create(product);
-            productDTO = new()
+            Farm? farm = await farmRepository.GetById(productDTO.FarmId);
+            if (farm == null)
             {
-                Name = product.Name,
-                Id = product.Id,
-                CategoryId = product.CategoryId,
-                Image = product.Image,
-                QuantityTypeId=product.QuantityTypeId,
-                Description=product.Description
-            };
-            return productDTO;
+                return (productDTO, 0);
+            }
+            (product, bool b) = await productRepository.Create(product);
+            if (b == true)
+            {
+                productDTO.Id = product.Id;
+                return (productDTO, 1);
+            }
+            return (productDTO, 2);
         }
         public async Task<ProductDTO?> Get(int id)
         {
@@ -72,19 +79,23 @@ namespace LocalGoods.BAL.Services.Implementation
                    Name=product.Name,
                    CategoryId=product.CategoryId,
                    Image = product.Image,
-                   QuantityTypeId = product.QuantityTypeId
+                   QuantityTypeId = product.QuantityTypeId,
+                   FarmId=product.FarmId,
+                   Description=product.Description,
+                   Price=product.Price,
+                   Surplus=product.Surplus
                 };
                 productDTOs.Add(productDTO);
             }
             return productDTOs;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             return await productRepository.Delete(id);
         }
 
-        public async Task<ProductDTO?> Update(ProductDTO productDTO)
+        public async Task<(ProductDTO,int)> Update(ProductDTO productDTO)
         {
             Product product = new()
             {
@@ -92,21 +103,13 @@ namespace LocalGoods.BAL.Services.Implementation
                 Name = productDTO.Name,
                 CategoryId = productDTO.CategoryId,
                 Image=productDTO.Image,
-                QuantityTypeId=productDTO.QuantityTypeId
+                QuantityTypeId=productDTO.QuantityTypeId,
+                Surplus=productDTO.Surplus,
+                Description=productDTO.Description,
+                Price=productDTO.Price,
             };
-            bool i=await productRepository.Update(product);
-            if(i == true)
-            {
-                return new ProductDTO()
-                {
-                    Id=product.Id,
-                    Name=product.Name,
-                    CategoryId=product.CategoryId,
-                    Image = product.Image,
-                    QuantityTypeId = product.QuantityTypeId
-                };
-            }
-            return null;
+            int i = await productRepository.Update(product);
+            return (productDTO, i);
         }
 
     }

@@ -42,7 +42,7 @@ namespace LocalGoods.DAL.Repositories
 
         public async Task<User?> GetById(int id)
         {
-            return await _context.Users.SingleOrDefaultAsync(x=>x.Id==id);
+            return await _context.Users.FindAsync(id);
         }
 
         public async Task<User> Update(User item)
@@ -53,12 +53,9 @@ namespace LocalGoods.DAL.Repositories
         }
         public async Task<List<Farm>> GetFarms(int id)
         {
-            User? user = await GetById(id);
-            if(user==null)
-            {
-                return new List<Farm>();
-            }
-            return null;
+
+            List<Farm> farms = await _context.Farms.ToListAsync();
+            return farms.FindAll(x => x.UserId == id);
         }
     }
 }

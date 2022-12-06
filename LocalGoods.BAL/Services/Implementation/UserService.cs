@@ -90,21 +90,35 @@ namespace LocalGoods.BAL.Services.Implementation
             return userDTO;
 
         }
-        public async Task<List<FarmDTO>> GetFarms(int id)
+        public async Task<(List<FarmDTO>,int)> GetFarms(int id)
         {
-            List<Farm> farms = await userRepository.GetFarms(id);
-            List<FarmDTO> farmDTOs = new();
-            foreach (Farm farm in farms)
+            List<FarmDTO> farmdtos = new();
+            User? user = await userRepository.GetById(id);
+            if (user == null)
             {
-                farmDTOs.Add(new FarmDTO()
+                return (farmdtos,0);
+            }
+            List<Farm> farms1 = await userRepository.GetFarms(id);
+            foreach (Farm farm in farms1)
+            {
+                farmdtos.Add(new FarmDTO()
                 {
-                    Id = farm.Id,
-                    Name = farm.Name,
-                    UserId = id,
-                    Address = farm.Address
+                   Id=farm.Id,
+                   Name=farm.Name,
+                   Address=farm.Address,
+                   Country=farm.Country,
+                   City=farm.City,
+                   Rating=farm.Rating,
+                   Latitude=farm.Latitude,
+                   Longitude=farm.Longitude,
+                   Email=farm.Email,
+                   FaceBook=farm.FaceBook,
+                   Instagram=farm.Instagram,
+                   Telephone=farm.Telephone,
+                   UserId=farm.UserId
                 });
             }
-            return farmDTOs;
+            return (farmdtos, 1);
         }
     }
 }

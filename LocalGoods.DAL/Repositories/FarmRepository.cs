@@ -14,11 +14,20 @@ namespace LocalGoods.DAL.Operations
             _context = context;
         }
 
-        public async Task<Farm> Create(Farm item)
+        public async Task<(Farm,bool)> Create(Farm item)
         {
-            await _context.Farms.AddAsync(item);
-            await _context.SaveChangesAsync();
-            return item;
+            
+                try
+                {
+                    await _context.Farms.AddAsync(item);
+                    await _context.SaveChangesAsync();
+                    return (item, true);
+                }
+                catch (Exception)
+                {
+                    return (item, false);
+                }
+           
         }
 
         public async Task<IEnumerable<Farm>> GetAll()
@@ -52,18 +61,35 @@ namespace LocalGoods.DAL.Operations
                 return 0;
             }
         }
-
-        public async Task<bool> Update(Farm farm)
+        //Under development
+        public async Task<int> Update(Farm farm)
         {
             try
             {
-                _context.Entry(farm).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return true;
+                Farm? farm1= await GetById(farm.Id);
+                if (farm1 != null)
+                {
+                    try
+                    {
+                        var entry = _context.Entry(farm);
+                        entry.State = EntityState.Modified;
+                       // entry.Property("UserId").IsModified = false;
+                        await _context.SaveChangesAsync();
+                        return 1;
+                    }
+                    catch(Exception)
+                    {
+                        return 2;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
             }
             catch (Exception)
             {
-                return false;
+                return 2;
             }
         }
 

@@ -23,17 +23,26 @@ namespace LocalGoods.Controllers
         }
 
         [HttpPost("{UserId}")]
-        public async Task<ActionResult<CreateFarmDTO>> Create(int UserId, FarmDTO farmDTO)
+        public async Task<ActionResult<FarmDTO>> Create(int UserId, FarmDTO farmDTO)
         {
-            if (farmDTO.Name is null)
-                return BadRequest();
             farmDTO.UserId = UserId;
-            FarmDTO? createdFarm = await farmService.Create(farmDTO);
-            if (createdFarm is null)
+            (FarmDTO createdFarm,int i) = await farmService.Create(farmDTO);
+            if(i==0)
+            {
+                return NotFound("User Not Found");
+            }
+            else if(i==1)
+            {
+                return Ok(createdFarm);
+            }
+            else if(i==2)
+            {
+                return StatusCode(501);
+            }
+            else
             {
                 return BadRequest();
             }
-            return Ok(createdFarm);
         }
         [HttpGet]
         public async Task<ActionResult<List<FarmDTO>>> Get()
@@ -42,12 +51,8 @@ namespace LocalGoods.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FarmDTO>> GetById(int? id)
+        public async Task<ActionResult<FarmDTO>> GetById(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
             FarmDTO? farm = await farmService.Get((int)id);
             if(farm is null)
             {
@@ -57,12 +62,8 @@ namespace LocalGoods.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<int>> Delete(int? id)
+        public async Task<ActionResult<int>> Delete(int id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
             int i = await farmService.Delete((int)id);
             if(i==1)
             {
@@ -72,22 +73,45 @@ namespace LocalGoods.Controllers
             {
                 return NotFound();
             }
-            return StatusCode(501);
-         }
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id,FarmDTO? farmDTO)
-        {
-            if (farmDTO is null)
+            else if(i==2)
             {
-                return BadRequest();
-            }
-            farmDTO.Id = id;
-            farmDTO = await farmService.Update((FarmDTO)farmDTO);
-            if (farmDTO != null)
-            {
-                return Ok(farmDTO);
+                return StatusCode(501);
             }
             return BadRequest();
+         }
+        //Under development
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> Update(int id,FarmDTO farmDTO)
+        //{
+        //    farmDTO.Id = id;
+        //    (farmDTO,int i) = await farmService.Update(farmDTO);
+        //    if(i==1)
+        //    {
+        //        return Ok(farmDTO);
+        //    }
+        //    else if(i==0)
+        //    {
+        //        return NotFound("Farm Not Found");
+        //    }
+        //    else if(i==2)
+        //    {
+        //        return StatusCode(501);
+        //    }
+        //    return BadRequest();
+        //}
+        [HttpGet("{id}/FarmProducts")]
+        public async Task<ActionResult> FarmProducts(int id)
+        {
+            (List<ProductDTO> products, int i) = await farmService.GetProducts(id);
+            if(i==0)
+            {
+                return NotFound("Farm Not Found");
+            }
+            else if(i==1)
+            {
+                return Ok(products);
+            }
+            return Ok(products);
         }
     }
 }

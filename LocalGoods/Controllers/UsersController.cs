@@ -28,9 +28,18 @@ namespace LocalGoods.Controllers
             return Ok(farmer);
         }
         [HttpGet("{FarmerId}/Farms")]
-        public async Task<ActionResult<List<FarmDTO>>> GetAll(int FarmerId)
+        public async Task<ActionResult<List<FarmDTO>>> GetAllFarms(int FarmerId)
         {
-            return Ok(await userService.GetFarms(FarmerId));
+            (List<FarmDTO> farms, int i) = await userService.GetFarms(FarmerId);
+            if (i == 0)
+            {
+                return NotFound("User Not Found");
+            }
+            else if (i == 1)
+            {
+                return Ok(farms);
+            }
+            return Ok(farms);
         }
 
         [HttpGet("{id}")]

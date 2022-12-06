@@ -19,14 +19,17 @@ namespace LocalGoods.BAL.DTOs
         [MinLength(5)]
         public string Name { get; set; }
         [Required]
-        public string Description { get; set; } 
+        public string Description { get; set; }
+        [Required]
         public Decimal Price { get; set; }
+        [Required]
         public int Surplus { get; set; }
         public string Image { get; set; }
         [Required]
         public int CategoryId { get; set; }
-        [Required]
+        [SwaggerSchema(ReadOnly =true)]
         public int FarmId { get; set; }
+        [Required]
         public int QuantityTypeId { get; set; }
 
     }

@@ -66,7 +66,7 @@ namespace LocalGoods.Controllers
             return Ok(await categoryService.GetAll());
         }
         [HttpPut("Update/{id}")]
-        public async Task<ActionResult> Update(int id, CategoryDTO? category)
+        public async Task<ActionResult> Update(int id, CategoryDTO category)
         {
             if (category is null)
             {

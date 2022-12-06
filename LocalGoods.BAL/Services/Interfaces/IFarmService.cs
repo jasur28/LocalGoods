@@ -4,11 +4,11 @@ namespace LocalGoods.BAL.Services.Interfaces
 {
     public interface IFarmService
     {
-        Task<FarmDTO?> Create(FarmDTO farm);
+        Task<(FarmDTO,int)> Create(FarmDTO farm);
         Task<FarmDTO?> Get(int id);
-        Task<FarmDTO?> Update(FarmDTO farm);
+        Task<(FarmDTO,int)> Update(FarmDTO farm);
         Task<int> Delete(int id);
         Task<List<FarmDTO>> GetAll();
-        Task<List<ProductDTO>> GetProducts(int id);
+        Task<(List<ProductDTO>,int)> GetProducts(int id);
     }
 }

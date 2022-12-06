@@ -9,9 +9,9 @@ namespace LocalGoods.DAL.Interfaces
 {
     public interface IProductRepository
     {
-        public Task<Product> Create(Product product);
-        public Task<bool> Delete(int id);
-        public Task<bool> Update(Product product);
+        public Task<(Product,bool)> Create(Product product);
+        public Task<int> Delete(int id);
+        public Task<int> Update(Product product);
         public Task<IEnumerable<Product>> GetAll();
         public Task<Product?> GetById(int id);
     }

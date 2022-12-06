@@ -9,12 +9,14 @@ namespace LocalGoods.BAL.Services.Implementation
     public class FarmService : IFarmService
     {
         private IFarmRepository _farmRepository;
+        private IUserRepository _userRepository;
 
-        public FarmService(IFarmRepository farmRepository)
+        public FarmService(IFarmRepository farmRepository, IUserRepository userRepository)
         {
             _farmRepository = farmRepository;
+            _userRepository = userRepository;
         }
-        public async Task<FarmDTO?> Create(FarmDTO farmDTO)
+        public async Task<(FarmDTO,int)> Create(FarmDTO farmDTO)
         {
             Farm? farm = new Farm()
             {
@@ -30,17 +32,18 @@ namespace LocalGoods.BAL.Services.Implementation
                 Instagram = farmDTO.Instagram,
                 FaceBook=farmDTO.FaceBook
             };
-            farm = await _farmRepository.Create(farm);
-            if (farm is null)
+            User? user = await _userRepository.GetById(farmDTO.UserId);
+            if(user == null)
             {
-                return null;
+                return (farmDTO,0);
             }
-            return new FarmDTO()
+            (farm,bool b) = await _farmRepository.Create(farm);
+            if(b==true)
             {
-                Id = farm.Id,
-                Name = farm.Name,
-                Address = farm.Address,
-            };
+                farmDTO.Id = farm.Id;
+                return (farmDTO,1);
+            }
+            return (farmDTO, 2);
         }
         public async Task<FarmDTO?> Get(int id)
         {
@@ -80,31 +83,35 @@ namespace LocalGoods.BAL.Services.Implementation
             return await _farmRepository.Delete(id);
         }
 
-        public async Task<FarmDTO?> Update(FarmDTO farmDTO)
+        public async Task<(FarmDTO,int)> Update(FarmDTO farmDTO)
         {
             Farm farm = new()
             {
                 Id = farmDTO.Id,
                 Name = farmDTO.Name,
-                Address=farmDTO.Address
+                Address=farmDTO.Address,
+                City = farmDTO.City,
+                Country = farmDTO.Country,
+                Email=farmDTO.Email,
+                Telephone = farmDTO.Telephone,
+                FaceBook = farmDTO.FaceBook,
+                Instagram = farmDTO.Instagram,
+                Latitude=farmDTO.Latitude,
+                Longitude=farmDTO.Longitude
             };
-            bool i = await _farmRepository.Update(farm);
-            if (i == true)
-            {
-                return new FarmDTO()
-                {
-                    Id = farm.Id,
-                    Name = farm.Name,
-                    Address=farm.Address
-                };
-            }
-            return null;
+            int i = await _farmRepository.Update(farm);
+            farmDTO.UserId = farm.UserId;
+            return (farmDTO, i);
         }
 
-        public async Task<List<ProductDTO>> GetProducts(int id)
+        public async Task<(List<ProductDTO>,int)> GetProducts(int id)
         {
-            Farm? farm = await _farmRepository.GetById(id);
             List<ProductDTO> productdtos = new();
+            Farm? farm = await _farmRepository.GetById(id);
+            if(farm == null)
+            {
+                return (productdtos, 0);
+            }
             List<Product> products1 = await _farmRepository.GetProducts(id);
             foreach(Product product in products1)
             {
@@ -115,10 +122,14 @@ namespace LocalGoods.BAL.Services.Implementation
                     FarmId = product.FarmId,
                     Price = product.Price,
                     Surplus = product.Surplus,
-                    Description = product.Description,                    
+                    Description = product.Description,  
+                    Image = product.Image,
+                    QuantityTypeId = product.QuantityTypeId,
+                    Name = product.Name,
+                    CategoryId = product.CategoryId,
                 });
             }
-            return productdtos;
+            return (productdtos,1);
         }
     }
 }

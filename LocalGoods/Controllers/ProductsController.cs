@@ -1,5 +1,7 @@
 ﻿using LocalGoods.BAL.DTOs;
+using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
+using LocalGoods.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +18,27 @@ namespace LocalGoods.Controllers
             this.productService = productService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ProductDTO>> Create(ProductDTO product)
+        [HttpPost("{FarmId}")]
+        public async Task<ActionResult<ProductDTO>> Create(int FarmId,ProductDTO productDTO)
         {
-            if (product is null)
-                return BadRequest();
-            product = await productService.Create(product);
-            return Ok(product);
+            productDTO.FarmId = FarmId;
+            (ProductDTO createdProduct, int i) = await productService.Create(productDTO);
+            if (i == 0)
+            {
+                return NotFound("Farm Not Found");
+            }
+            else if (i == 1)
+            {
+                return Ok(createdProduct);
+            }
+            else if (i == 2)
+            {
+                return StatusCode(501,productDTO);
+            }
+            else
+            {
+                return BadRequest(productDTO);
+            }
         }
 
         [HttpGet("GetById/{id}")]
@@ -38,35 +54,52 @@ namespace LocalGoods.Controllers
             return Ok(product);
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<bool>> Delete(int? id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete(int id)
         {
-            if(id == null)
+            int i = await productService.Delete((int)id);
+            if (i == 1)
             {
-                return BadRequest();
+                return Ok("Deleted Successfully");
             }
-            bool i = await productService.Delete((int)id);
-            return Ok(i);
+            else if (i == 0)
+            {
+                return NotFound();
+            }
+            else if (i == 2)
+            {
+                return StatusCode(501);
+            }
+            return BadRequest();
         }
         [HttpGet]
         public async Task<ActionResult<List<ProductDTO>>> GetAll()
         {
             return Ok(await productService.GetAll());
         }
-        [HttpPut("Update/{id}")]
-        public async Task<ActionResult> Update(int id,ProductDTO? product)
-        {
-            if(product is null)
-            {
-                return BadRequest();
-            }
-            product.Id = id;
-            product = await productService.Update((ProductDTO)product);
-            if(product != null)
-            {
-                return Ok(product);
-            }
-            return BadRequest();
-        }
+        //Under Development
+        //[HttpPut("Update/{id}")]
+        //public async Task<ActionResult> Update(int id,ProductDTO? product)
+        //{
+        //    if (product is null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    product.Id = id;
+        //    (product, int a) = await productService.Update(product);
+        //    if (a == 1)
+        //    {
+        //        return Ok(product);
+        //    }
+        //    else if (a == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    else if (a == 2)
+        //    {
+        //        return StatusCode(501);
+        //    }
+        //    return BadRequest();
+        //}
     }
 }
