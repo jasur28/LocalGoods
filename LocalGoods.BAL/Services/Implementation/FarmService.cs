@@ -75,7 +75,7 @@ namespace LocalGoods.BAL.Services.Implementation
             return farmDTOs;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<int> Delete(int id)
         {
             return await _farmRepository.Delete(id);
         }

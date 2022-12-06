@@ -11,9 +11,9 @@ namespace LocalGoods.BAL.Services.Interfaces
     {
         Task<CategoryDTO> Create(CategoryDTO category);
         Task<CategoryDTO?> Get(int id);
-        Task<CategoryDTO?> Update(CategoryDTO category);
-        Task<bool> Delete(int id);
+        Task<(CategoryDTO,int)> Update(CategoryDTO category);
+        Task<int> Delete(int id);
         Task<List<CategoryDTO>> GetAll();
-        Task<IEnumerable<ProductDTO>> GetCategoryProducts(int id);
+        Task<(IEnumerable<ProductDTO>,int)> GetCategoryProducts(int id);
     }
 }

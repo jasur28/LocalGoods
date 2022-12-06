@@ -45,8 +45,20 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest();
             }
-            bool i = await categoryService.Delete((int)id);
-            return Ok(i);
+            int i = await categoryService.Delete((int)id);
+            if(i==0)
+            {
+                return NotFound();
+            }
+            else if(i==1)
+            {
+                return Ok("Deleted Successfully");
+            }
+            else if(i==2)
+            {
+                return StatusCode(501);
+            }
+            return BadRequest();
         }
         [HttpGet]
         public async Task<ActionResult<List<CategoryDTO>>> GetAll()
@@ -61,17 +73,34 @@ namespace LocalGoods.Controllers
                 return BadRequest();
             }
             category.Id = id;
-            category = await categoryService.Update((CategoryDTO)category);
-            if (category != null)
+            (category,int a) = await categoryService.Update((CategoryDTO)category);
+            if (a==1)
             {
                 return Ok(category);
+            }
+            else if(a==0)
+            {
+                return NotFound();
+            }
+            else if(a==2)
+            {
+                return StatusCode(501);
             }
             return BadRequest();
         }
         [HttpGet("{id}/CategoryProducts")]
         public async Task<ActionResult<List<ProductDTO>>> GetCategoryProducts(int id)
         {
-            return Ok(await categoryService.GetCategoryProducts(id));
+            (IEnumerable<ProductDTO> products, int a) = await categoryService.GetCategoryProducts(id);
+            if(a == 0)
+            {
+                return NotFound();
+            }
+            else if(a==1)
+            {
+                return Ok(products);
+            }
+            return StatusCode(501);
         }
     }
 }

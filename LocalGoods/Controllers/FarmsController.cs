@@ -57,14 +57,22 @@ namespace LocalGoods.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> Delete(int? id)
+        public async Task<ActionResult<int>> Delete(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
-            bool i = await farmService.Delete((int)id);
-            return Ok(i);
+            int i = await farmService.Delete((int)id);
+            if(i==1)
+            {
+                return Ok("Deleted Successfully");
+            }
+            else if(i==0)
+            {
+                return NotFound();
+            }
+            return StatusCode(501);
          }
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id,FarmDTO? farmDTO)
@@ -81,67 +89,5 @@ namespace LocalGoods.Controllers
             }
             return BadRequest();
         }
-        //[HttpPost("{FarmId}/Products/{id}")]
-        //public async Task<ActionResult<FarmProductsMappingDTO?>> CreateMapping(int FarmId, int id, AFarmProductDTO mappingDTO)
-        //{
-        //    if (mappingDTO is null)
-        //        return BadRequest();
-        //    FarmProductsMappingDTO farmProductsMapping = new()
-        //    {
-        //        ProductId = id,
-        //        FarmId = FarmId,
-        //        Price = mappingDTO.Price,
-        //        Description = mappingDTO.Description,
-        //        Surplus = mappingDTO.Surplus
-        //    };
-        //    FarmProductsMappingDTO? createdMapping = await farmProductsService.Create(farmProductsMapping);
-        //    if (createdMapping != null)
-        //    {
-        //        if(createdMapping.Id == 0)
-        //        {
-        //            return NotFound("Product Already Exists in the farm");
-        //        }
-        //        return Ok(createdMapping);
-        //    }
-        //    return BadRequest();
-        //}
-
-        //[HttpGet("{FarmId}/Products")]
-        //public async Task<ActionResult<List<FarmProductsMappingDTO>>> GetProducts(int FarmId)
-        //{
-        //    List<FarmProductsMappingDTO> products = await farmService.GetProducts(FarmId);
-        //    return Ok(products);
-        //}
-        //[HttpGet("Products/{id}")]
-        //public async Task<ActionResult<FarmProductsMappingDTO?>> GetFarmProduct(int id)
-        //{
-        //    FarmProductsMappingDTO? product = await farmProductsService.Get(id);
-        //    if(product==null)
-        //        return NotFound();
-        //    return Ok(product);
-        //}
-       
-        //[HttpPut("Products/{id}")]
-        //public async Task<ActionResult<FarmProductsMappingDTO>> EditProduct(int id, AFarmProductDTO productDTO)
-        //{
-        //    if (productDTO is null)
-        //        return BadRequest();
-        //    FarmProductsMappingDTO farmProductsMappingDTO = new()
-        //    {
-        //        Id = id,
-        //        Price = productDTO.Price,
-        //        Surplus = productDTO.Surplus,
-        //        Description=productDTO.Description,
-        //    };
-        //    FarmProductsMappingDTO? editedMapping = await farmProductsService.Update(farmProductsMappingDTO);
-        //    if(editedMapping!=null)
-        //        return Ok(editedMapping);
-        //    return NotFound();
-        //}
-        //[HttpDelete("Products/{id}")]
-        //public async Task<ActionResult<bool>> DeleteMapping(int id, AFarmProductDTO productDTO)
-        //{
-        //    return await farmProductsService.Delete(id);
-        //}
     }
 }
