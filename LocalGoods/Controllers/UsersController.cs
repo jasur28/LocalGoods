@@ -33,10 +33,10 @@ namespace LocalGoods.Controllers
                 Address = user.Address,
                 City = user.City,
                 Country = user.Country,
-                FirstName= user.FirstName,
-                LastName= user.LastName,
-                Instagram=user.Instagram,
-                Facebook=user.FaceBook       
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Instagram = user.Instagram,
+                Facebook = user.FaceBook
             };
             return Ok(dto);
         }
