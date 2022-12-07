@@ -34,7 +34,7 @@ namespace LocalGoods.BAL.Services.Implementation
                 Image = productDTO.Image,
                 CategoryId=productDTO.CategoryId,
                 QuantityTypeId=productDTO.QuantityTypeId,
-                FarmId=productDTO.FarmId
+                FarmId=productDTO.FarmId,
             };
             Farm? farm = await farmRepository.GetById(productDTO.FarmId);
             if (farm == null)
@@ -60,7 +60,11 @@ namespace LocalGoods.BAL.Services.Implementation
                     Name=product.Name,
                     CategoryId=product.CategoryId,
                     Image=product.Image,
-                    QuantityTypeId=product.QuantityTypeId
+                    QuantityTypeId=product.QuantityTypeId,
+                    Surplus=product.Surplus,
+                    FarmId=product.FarmId,
+                    Description=product.Description,
+                    Price=product.Price
                 };
                 return productDTO;
             }

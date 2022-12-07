@@ -2,6 +2,7 @@
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,12 @@ namespace LocalGoods.BAL.Services.Implementation
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository categoryRepository;
+        private readonly UserManager<User> userManager;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, UserManager<User> userManager)
         {
             this.categoryRepository = categoryRepository;
+            this.userManager = userManager;
         }
 
         public async Task<CategoryDTO> Create(CategoryDTO categoryDTO)

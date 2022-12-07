@@ -12,7 +12,6 @@ namespace LocalGoods.DAL.Models
     public class Category
     {
         public int Id { get; set; }
-        [MinLength(5)]
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }

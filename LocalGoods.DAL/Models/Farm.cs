@@ -13,24 +13,18 @@ namespace LocalGoods.DAL.Models
     public class Farm
     {
         public int Id { get; set; }
-        [MinLength(5)]
         [Required]
         public string Name { get; set; }
-        [MinLength(5)]
-        [Required]
+        public string Description { get; set; }
         public string Address { get; set; }
-        [MinLength(5)]
-        [Required]
-        public string City { get; set; }
-        [MinLength(5)]
-        [Required]
+        public string City { get; set; } 
         public string Country { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public string Image { get; set; }
+        //public decimal Latitude { get; set; }
+        //public decimal Longitude { get; set; }
         public DateTime CreatedOn { get; set; }
         public int Rating { get; set; }
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string Telephone { get; set; }
         public string Email { get; set; }
         public string FaceBook { get; set; }

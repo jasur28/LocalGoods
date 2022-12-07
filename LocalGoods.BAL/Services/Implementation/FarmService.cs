@@ -3,45 +3,43 @@ using LocalGoods.DAL.Models;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.BAL.DTOs;
 using LocalGoods.DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace LocalGoods.BAL.Services.Implementation
 {
     public class FarmService : IFarmService
     {
-        private IFarmRepository _farmRepository;
-        private IUserRepository _userRepository;
+        private readonly IFarmRepository _farmRepository;
+        private readonly UserManager<User> userManager;
 
-        public FarmService(IFarmRepository farmRepository, IUserRepository userRepository)
+        public FarmService(IFarmRepository farmRepository, UserManager<User> userManager)
         {
             _farmRepository = farmRepository;
-            _userRepository = userRepository;
+            this.userManager=userManager;
         }
         public async Task<(FarmDTO,int)> Create(FarmDTO farmDTO)
         {
-            Farm? farm = new Farm()
+            Farm? farm = new()
             {
                 Name = farmDTO.Name,
+                Description = farmDTO.Description,
                 Address = farmDTO.Address,
                 UserId= farmDTO.UserId,
                 Email = farmDTO.Email,
+                Image=farmDTO.Image,
                 City = farmDTO.City,
-                Longitude = farmDTO.Longitude,
-                Latitude = farmDTO.Latitude,
+                //Longitude = farmDTO.Longitude,
+                //Latitude = farmDTO.Latitude,
                 Country = farmDTO.Country,
                 Telephone = farmDTO.Telephone,
                 Instagram = farmDTO.Instagram,
                 FaceBook=farmDTO.FaceBook
             };
-            User? user = await _userRepository.GetById(farmDTO.UserId);
-            if(user == null)
-            {
-                return (farmDTO,0);
-            }
-            (farm,bool b) = await _farmRepository.Create(farm);
-            if(b==true)
+            (farm, bool b) = await _farmRepository.Create(farm);
+            if (b == true)
             {
                 farmDTO.Id = farm.Id;
-                return (farmDTO,1);
+                return (farmDTO, 1);
             }
             return (farmDTO, 2);
         }
@@ -54,8 +52,20 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Id = farm.Id,
                 Name = farm.Name,
+                Description = farm.Description,
                 Address = farm.Address,
-                UserId=farm.UserId
+                UserId=farm.UserId,
+                City=farm.City,
+                Image=farm.Image,
+                Country = farm.Country, 
+                //Latitude=farm.Latitude,
+                //Longitude=farm.Longitude,
+                Email=farm.Email,   
+                CreatedOn=farm.CreatedOn,   
+                FaceBook = farm.FaceBook,
+                Rating=farm.Rating,
+                Instagram=farm.Instagram,
+                Telephone=farm.Telephone
             };
             return farmDTO; 
         }
@@ -70,8 +80,20 @@ namespace LocalGoods.BAL.Services.Implementation
                 {
                     Id = farm.Id,
                     Name = farm.Name,
+                    Description = farm.Description,
                     Address = farm.Address,
-                    UserId=farm.UserId
+                    UserId=farm.UserId,
+                    City = farm.City,
+                    Image = farm.Image,
+                    Country = farm.Country,
+                    //Latitude = farm.Latitude,
+                    //Longitude = farm.Longitude,
+                    Email = farm.Email,
+                    CreatedOn = farm.CreatedOn,
+                    FaceBook = farm.FaceBook,
+                    Rating = farm.Rating,
+                    Instagram = farm.Instagram,
+                    Telephone = farm.Telephone
                 };
                 farmDTOs.Add(farmDTO);
             }
@@ -89,6 +111,7 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Id = farmDTO.Id,
                 Name = farmDTO.Name,
+                Description=farmDTO.Description,
                 Address=farmDTO.Address,
                 City = farmDTO.City,
                 Country = farmDTO.Country,
@@ -96,8 +119,8 @@ namespace LocalGoods.BAL.Services.Implementation
                 Telephone = farmDTO.Telephone,
                 FaceBook = farmDTO.FaceBook,
                 Instagram = farmDTO.Instagram,
-                Latitude=farmDTO.Latitude,
-                Longitude=farmDTO.Longitude
+                //Latitude=farmDTO.Latitude,
+                //Longitude=farmDTO.Longitude
             };
             int i = await _farmRepository.Update(farm);
             farmDTO.UserId = farm.UserId;

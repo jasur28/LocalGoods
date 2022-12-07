@@ -18,10 +18,12 @@ namespace LocalGoods.Controllers
         private readonly LocalGoodsDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager,
-            LocalGoodsDbContext context,
-            IConfiguration configuration)
+        public AuthenticationController(
+                UserManager<User> userManager,
+                RoleManager<IdentityRole> roleManager,
+                LocalGoodsDbContext context,
+                IConfiguration configuration
+                )
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -55,21 +57,7 @@ namespace LocalGoods.Controllers
 
             if (result.Succeeded)
             {
-                ////Add user role
-
-                //switch (registerVM.Role)
-                //{
-                //    case UserRoles.Manager:
-                //        await _userManager.AddToRoleAsync(newUser, UserRoles.Manager);
-                //        break;
-                //    case UserRoles.Student:
-                //        await _userManager.AddToRoleAsync(newUser, UserRoles.Student);
-                //        break;
-                //    default:
-                //        break;
-                //}
-
-
+                await _userManager.AddToRoleAsync(newUser, DAL.Helpers.UserRoles.User);
                 return Ok("User created");
             }
             return BadRequest("User could not be created");
@@ -82,7 +70,6 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest("Please, provide all required fields");
             }
-
             var userExists = await _userManager.FindByEmailAsync(loginVM.EmailAddress);
             if (userExists != null && await _userManager.CheckPasswordAsync(userExists, loginVM.Password))
             {

@@ -10,7 +10,7 @@ namespace LocalGoods.BAL.DTOs
 {
     public class QuantityTypeDTO
     {
-#nullable disable
+        #nullable disable
         [SwaggerSchema(ReadOnly=true)]
         public int Id { get; set; }
         [Required]

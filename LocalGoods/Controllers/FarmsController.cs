@@ -2,6 +2,7 @@ using LocalGoods.BAL.DTOs;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
 
@@ -12,19 +13,19 @@ namespace LocalGoods.Controllers
     [ApiController]
     public class FarmsController : ControllerBase
     {
-        private readonly IUserService farmerService;
+        private readonly UserManager<User> userManager;
         private readonly IFarmService farmService;
         private readonly IProductService productService;
 
-        public FarmsController(IFarmService farmService,IProductService productService, IUserService farmerService)
+        public FarmsController(IFarmService farmService,IProductService productService, UserManager<User> userManager)
         {
             this.farmService = farmService;
             this.productService = productService;
-            this.farmerService = farmerService;
+            this.userManager = userManager;
         }
 
         [HttpPost("{UserId}")]
-        public async Task<ActionResult<FarmDTO>> Create(int UserId, FarmDTO farmDTO)
+        public async Task<ActionResult<FarmDTO>> Create(string UserId, FarmDTO farmDTO)
         {
             farmDTO.UserId = UserId;
             (FarmDTO createdFarm,int i) = await farmService.Create(farmDTO);

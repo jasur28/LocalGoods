@@ -2,8 +2,11 @@
 using LocalGoods.BAL.DTOs.UserDTO;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
+using LocalGoods.DAL.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocalGoods.Controllers
 {
@@ -11,74 +14,84 @@ namespace LocalGoods.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService userService;
-        public UsersController(IUserService userService)
+        private readonly UserManager<User> userManager;
+        public UsersController(UserManager<User> userManager)
         {
-            this.userService = userService;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<CreateUserDTO>> Create(CreateUserDTO farmerDTO)
-        {
-            if (farmerDTO.FirstName is null)
-                return BadRequest();
-
-            var farmer = await userService.Create(farmerDTO);
-
-            return Ok(farmer);
-        }
-        [HttpGet("{FarmerId}/Farms")]
-        public async Task<ActionResult<List<FarmDTO>>> GetAllFarms(int FarmerId)
-        {
-            (List<FarmDTO> farms, int i) = await userService.GetFarms(FarmerId);
-            if (i == 0)
-            {
-                return NotFound("User Not Found");
-            }
-            else if (i == 1)
-            {
-                return Ok(farms);
-            }
-            return Ok(farms);
+            this.userManager = userManager;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDTO>> GetById(int id)
+        public async Task<ActionResult<UserDTO>> GetById(string id)
         {
-            UserDTO farmer = await userService.Get(id);
-            return Ok(farmer);
+            User user = await userManager.FindByIdAsync(id);
+            UserDTO dto = new()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                TelePhone = user.PhoneNumber,
+                Address = user.Address,
+                City = user.City,
+                Country = user.Country,
+                FirstName= user.FirstName,
+                LastName= user.LastName,
+                Instagram=user.Instagram,
+                Facebook=user.FaceBook       
+            };
+            return Ok(dto);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(string id)
         {
-            var farmer=await userService.Get(id);
-            if (farmer != null)
+            User user = await userManager.FindByIdAsync(id);
+            if (user != null)
             {
-                var status = await userService.Delete(farmer);
-                return true;
+                IdentityResult result = await userManager.DeleteAsync(user);
+                if(result.Succeeded)
+                {
+                    return true;
+                }
             }
-
             return false;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<UserDTO>>> GetAll()
         {
-            return Ok(await userService.GetAll());
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserDTO>> Update(int id, UserDTO farmerDTO)
-        {
-            if (id != farmerDTO.Id)
+            var users=await userManager.Users.ToListAsync();
+            var dtos = new List<UserDTO>();
+            foreach(var user in users)
             {
-                return BadRequest();
+                dtos.Add(new UserDTO()
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    TelePhone = user.PhoneNumber,
+                    Address = user.Address,
+                    City = user.City,
+                    Country = user.Country,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Instagram = user.Instagram,
+                    Facebook = user.FaceBook
+                });
             }
-
-
-            var farmer = await userService.Update(farmerDTO);
-            return Ok(farmer);
+            return Ok(dtos);
         }
+
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult<UserDTO>> Update(int id, UserDTO farmerDTO)
+        //{
+        //    if (id != farmerDTO.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+
+        //    var farmer = await userManager.C
+        //    return Ok(farmer);
+        //}
     }
 }
