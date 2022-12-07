@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace LocalGoods.Controllers
 {
-    [Authorize(Roles = UserRoles.Farmer)]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class FarmersController : ControllerBase

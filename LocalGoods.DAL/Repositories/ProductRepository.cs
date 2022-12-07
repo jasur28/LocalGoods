@@ -75,8 +75,9 @@ namespace LocalGoods.DAL.Repositories
                 {
                     try
                     {
-                        _context.Entry(product1).State = EntityState.Modified;
-                      //  _context.Entry(product1).Property("FarmId").IsModified = false;
+                        //_context.Entry(product1).State = EntityState.Modified;
+                        //  _context.Entry(product1).Property("FarmId").IsModified = false;
+                        _context.Products.Update(product1);
                         await _context.SaveChangesAsync();
                         return 1;
                     }

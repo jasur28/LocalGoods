@@ -2,6 +2,7 @@
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
+using LocalGoods.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -78,12 +79,16 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<(CategoryDTO,int)> Update(CategoryDTO categoryDTO)
         {
-            Category category = new()
-            {
-                Id = categoryDTO.Id,
-                Name = categoryDTO.Name,
-                Description = categoryDTO.Description,
-            };
+            var category = await categoryRepository.GetById(categoryDTO.Id);
+            //category.Id = categoryDTO.Id;
+            category.Name = categoryDTO.Name;
+            category.Description = categoryDTO.Description;
+            //Category category = new()
+            //{
+            //    Id = categoryDTO.Id,
+            //    Name = categoryDTO.Name,
+            //    Description = categoryDTO.Description,
+            //};
             int i = await categoryRepository.Update(category);
             return (categoryDTO,i);
         }
