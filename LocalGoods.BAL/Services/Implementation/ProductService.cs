@@ -133,6 +133,10 @@ namespace LocalGoods.BAL.Services.Implementation
         {
 
             var product = await productRepository.GetById(productDTO.Id);
+            if(product is null)
+            {
+                return (productDTO, 0);
+            }
             product.Name = productDTO.Name;
             product.CategoryId = productDTO.CategoryId;
             product.Image = productDTO.Image;

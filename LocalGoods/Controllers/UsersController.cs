@@ -95,17 +95,25 @@ namespace LocalGoods.Controllers
             return StatusCode(501);
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult<UserDTO>> Update(int id, UserDTO farmerDTO)
-        //{
-        //    if (id != farmerDTO.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-
-        //    var farmer = await userManager.C
-        //    return Ok(farmer);
-        //}
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDTO>> Update(string id, UserDTO userDTO)
+        {
+            var users=userManager.Users.Where(x => x.Id == id);
+            if(!users.Any())
+            {
+                return NotFound("User Not Found");
+            }
+            User user = await userManager.FindByIdAsync(id);
+            var result=await userManager.SetEmailAsync(user,userDTO.Email);
+            if (result.Succeeded)
+            {
+                result=await userManager.SetUserNameAsync(user, userDTO.UserName);
+                if (result.Succeeded)
+                {
+                    return Ok(userDTO);
+                }
+            }
+            return StatusCode(501, new object[] { result });
+        }
     }
 }

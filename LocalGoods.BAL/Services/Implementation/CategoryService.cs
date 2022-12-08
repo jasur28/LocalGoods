@@ -81,6 +81,10 @@ namespace LocalGoods.BAL.Services.Implementation
         {
             var category = await categoryRepository.GetById(categoryDTO.Id);
             //category.Id = categoryDTO.Id;
+            if(category is null)
+            {
+                return (categoryDTO,0);
+            }
             category.Name = categoryDTO.Name;
             category.Description = categoryDTO.Description;
             //Category category = new()

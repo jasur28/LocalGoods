@@ -110,6 +110,10 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<(FarmDTO,int)> Update(FarmDTO farmDTO)
         {
             var farm = await _farmRepository.GetById(farmDTO.Id);
+            if(farm is null)
+            {
+                return (farmDTO, 0);
+            }
             farm.Name = farmDTO.Name;
             farm.Description = farmDTO.Description;
             farm.Address = farmDTO.Address;
