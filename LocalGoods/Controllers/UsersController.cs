@@ -37,7 +37,7 @@ namespace LocalGoods.Controllers
                 //FirstName= user.FirstName,
                 //LastName= user.LastName,
                 //Instagram=user.Instagram,
-                //Facebook=user.FaceBook       
+                //Facebook=user.FaceBook
             };
             return Ok(dto);
         }
