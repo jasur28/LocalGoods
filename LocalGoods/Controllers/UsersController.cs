@@ -29,14 +29,15 @@ namespace LocalGoods.Controllers
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                TelePhone = user.PhoneNumber,
-                Address = user.Address,
-                City = user.City,
-                Country = user.Country,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Instagram = user.Instagram,
-                Facebook = user.FaceBook
+                Roles=await userManager.GetRolesAsync(user)
+                //TelePhone = user.PhoneNumber,
+                //Address = user.Address,
+                //City = user.City,
+                //Country = user.Country,
+                //FirstName= user.FirstName,
+                //LastName= user.LastName,
+                //Instagram=user.Instagram,
+                //Facebook=user.FaceBook
             };
             return Ok(dto);
         }
@@ -63,24 +64,26 @@ namespace LocalGoods.Controllers
             var dtos = new List<UserDTO>();
             foreach(var user in users)
             {
+                IList<string> roles=await userManager.GetRolesAsync(user);
                 dtos.Add(new UserDTO()
                 {
                     Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
-                    TelePhone = user.PhoneNumber,
-                    Address = user.Address,
-                    City = user.City,
-                    Country = user.Country,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Instagram = user.Instagram,
-                    Facebook = user.FaceBook
+                    Roles = roles
+                    //TelePhone = user.PhoneNumber,
+                    //Address = user.Address,
+                    //City = user.City,
+                    //Country = user.Country,
+                    //FirstName = user.FirstName,
+                    //LastName = user.LastName,
+                    //Instagram = user.Instagram,
+                    //Facebook = user.FaceBook
                 });
             }
             return Ok(dtos);
         }
-        
+
         //[HttpPut("{id}")]
         //public async Task<ActionResult<UserDTO>> Update(int id, UserDTO farmerDTO)
         //{

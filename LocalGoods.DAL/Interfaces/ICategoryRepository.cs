@@ -15,5 +15,6 @@ namespace LocalGoods.DAL.Interfaces
         public Task<IEnumerable<Category>> GetAll();
         public Task<Category?> GetById(int id);
         public Task<(IEnumerable<Product>,int)> GetCategoryProducts(int id);
+        public Task<bool> CategoryExistsAsync(Category category);   
     }
 }

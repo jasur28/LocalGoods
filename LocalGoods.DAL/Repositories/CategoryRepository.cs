@@ -94,11 +94,8 @@ namespace LocalGoods.DAL.Repositories
                 Category? category = await GetById(id);
                 if (category != null)
                 {
-                    if(category.Products != null)
-                    {
-                        return (category.Products.ToList(), 1);
-                    }
-                    return (new List<Product>(), 1);
+                    IEnumerable<Product> products=_context.Products.ToList().Where(x => x.CategoryId == category.Id);
+                    return (products, 1);
                 }
                 return (new List<Product>(), 0);
             }
@@ -106,6 +103,12 @@ namespace LocalGoods.DAL.Repositories
             {
                 return (new List<Product>(), 0);
             }
+        }
+        public async Task<bool> CategoryExistsAsync(Category category)
+        {
+            IEnumerable<Category> categories = await GetAll();
+            categories=categories.Where(x => x.Name == category.Name);
+            return categories.Any();
         }
     }
 }

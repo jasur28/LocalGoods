@@ -58,12 +58,12 @@ namespace LocalGoods.BAL.Services.Implementation
                 City=farm.City,
                 Image=farm.Image,
                 Country = farm.Country, 
-                //Latitude=farm.Latitude,
-                //Longitude=farm.Longitude,
+                Latitude=farm.Latitude,
+                Longitude=farm.Longitude,
                 Email=farm.Email,   
                 CreatedOn=farm.CreatedOn,   
                 FaceBook = farm.FaceBook,
-                Rating=farm.Rating,
+               // Rating=farm.Rating,
                 Instagram=farm.Instagram,
                 Telephone=farm.Telephone
             };
@@ -86,8 +86,8 @@ namespace LocalGoods.BAL.Services.Implementation
                     City = farm.City,
                     Image = farm.Image,
                     Country = farm.Country,
-                    //Latitude = farm.Latitude,
-                    //Longitude = farm.Longitude,
+                    Latitude = farm.Latitude,
+                    Longitude = farm.Longitude,
                     Email = farm.Email,
                     CreatedOn = farm.CreatedOn,
                     FaceBook = farm.FaceBook,
@@ -95,6 +95,8 @@ namespace LocalGoods.BAL.Services.Implementation
                     Instagram = farm.Instagram,
                     Telephone = farm.Telephone
                 };
+
+                (farmDTO.Products,int i)= await GetProducts(farmDTO.Id);
                 farmDTOs.Add(farmDTO);
             }
             return farmDTOs;
@@ -119,8 +121,8 @@ namespace LocalGoods.BAL.Services.Implementation
                 Telephone = farmDTO.Telephone,
                 FaceBook = farmDTO.FaceBook,
                 Instagram = farmDTO.Instagram,
-                //Latitude=farmDTO.Latitude,
-                //Longitude=farmDTO.Longitude
+                Latitude=farmDTO.Latitude,
+                Longitude=farmDTO.Longitude
             };
             int i = await _farmRepository.Update(farm);
             farmDTO.UserId = farm.UserId;
@@ -144,12 +146,12 @@ namespace LocalGoods.BAL.Services.Implementation
                     Id = product.Id,
                     FarmId = product.FarmId,
                     Price = product.Price,
-                    Surplus = product.Surplus,
                     Description = product.Description,  
                     Image = product.Image,
-                    QuantityTypeId = product.QuantityTypeId,
                     Name = product.Name,
                     CategoryId = product.CategoryId,
+                    //Surplus = product.Surplus,
+                    //QuantityTypeId = product.QuantityTypeId,
                 });
             }
             return (productdtos,1);

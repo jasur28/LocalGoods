@@ -17,17 +17,26 @@ namespace LocalGoods.Controllers
     {
         private readonly UserManager<User> farmerManager;
         private readonly IFarmService farmService;
-        public FarmersController(UserManager<User> farmerManager, IFarmService farmService)
+        private readonly RoleManager<IdentityRole> roleManager;
+        public FarmersController(UserManager<User> farmerManager, IFarmService farmService, RoleManager<IdentityRole> roleManager)
         {
             this.farmerManager = farmerManager;
             this.farmService = farmService;
+            this.roleManager = roleManager;
         }
         [HttpGet("{FarmerId}/Farms")]
         public async Task<ActionResult<List<FarmDTO>>> GetAllFarms(string FarmerId)
         {
-            List<FarmDTO> farmDTOs = await farmService.GetAll();
-            farmDTOs.Select(x => x.UserId == FarmerId);
-            return farmDTOs;
+            User farmer = await farmerManager.FindByIdAsync(FarmerId);
+            var role=await roleManager.FindByIdAsync(DAL.Helpers.UserRoles.Farmer);
+            
+            if(farmer != null)
+            {
+                List<FarmDTO> farmDTOs = await farmService.GetAll();
+                farmDTOs.Select(x => x.UserId == FarmerId);
+                return farmDTOs;
+            }
+            return NotFound("Farmer Not Found");
         }
         [HttpPost("UserId")]
         public async Task<ActionResult> AssignFarmerRole(string UserId)

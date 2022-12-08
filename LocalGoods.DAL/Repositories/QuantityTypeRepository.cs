@@ -1,4 +1,5 @@
 ﻿using LocalGoods.DAL.Data;
+using LocalGoods.DAL.Helpers;
 using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,12 @@ namespace LocalGoods.DAL.Repositories
             {
                 return false;
             }
+        }
+        public async Task<bool> QuantityTypeExistsAsync(string name)
+        {
+            IEnumerable<QuantityType> quantityTypes = await GetAll();
+            quantityTypes = quantityTypes.Where(x => x.Name == name);
+            return quantityTypes.Any();
         }
     }
 }

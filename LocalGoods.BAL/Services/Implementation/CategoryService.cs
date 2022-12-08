@@ -103,7 +103,11 @@ namespace LocalGoods.BAL.Services.Implementation
                     Id= product.Id,
                     Name= product.Name,
                     Image= product.Image,
-                    QuantityTypeId= product.QuantityTypeId,
+                    Description= product.Description,
+                    FarmId=product.FarmId,
+                    CategoryId=product.CategoryId,
+                    Price=product.Price
+                    //QuantityTypeId= product.QuantityTypeId,
                 });
             }
             return (productsDTOs,a);

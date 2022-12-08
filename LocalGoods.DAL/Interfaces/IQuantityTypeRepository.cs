@@ -14,5 +14,6 @@ namespace LocalGoods.DAL.Interfaces
         public Task<bool> Update(QuantityType QuantityType);
         public Task<IEnumerable<QuantityType>> GetAll();
         public Task<QuantityType?> GetById(int id);
+        public Task<bool> QuantityTypeExistsAsync(string tname);
     }
 }
