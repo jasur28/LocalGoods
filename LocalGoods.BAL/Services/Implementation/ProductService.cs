@@ -136,8 +136,8 @@ namespace LocalGoods.BAL.Services.Implementation
             product.Name = productDTO.Name;
             product.CategoryId = productDTO.CategoryId;
             product.Image = productDTO.Image;
-            product.QuantityTypeId = productDTO.QuantityTypeId;
-            product.Surplus = productDTO.Surplus;
+            //product.QuantityTypeId = productDTO.QuantityTypeId;
+            //product.Surplus = productDTO.Surplus;
             product.Description = productDTO.Description;
             product.Price = productDTO.Price;
             //Product product = new()
