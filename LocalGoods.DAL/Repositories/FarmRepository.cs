@@ -71,9 +71,10 @@ namespace LocalGoods.DAL.Operations
                 {
                     try
                     {
-                        var entry = _context.Entry(farm);
-                        entry.State = EntityState.Modified;
-                       // entry.Property("UserId").IsModified = false;
+                        //var entry = _context.Entry(farm);
+                        //entry.State = EntityState.Modified;
+                        // entry.Property("UserId").IsModified = false;
+                        _context.Farms.Update(farm1);
                         await _context.SaveChangesAsync();
                         return 1;
                     }

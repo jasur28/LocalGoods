@@ -82,25 +82,25 @@ namespace LocalGoods.Controllers
             return BadRequest();
          }
         //Under development
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult> Update(int id,FarmDTO farmDTO)
-        //{
-        //    farmDTO.Id = id;
-        //    (farmDTO,int i) = await farmService.Update(farmDTO);
-        //    if(i==1)
-        //    {
-        //        return Ok(farmDTO);
-        //    }
-        //    else if(i==0)
-        //    {
-        //        return NotFound("Farm Not Found");
-        //    }
-        //    else if(i==2)
-        //    {
-        //        return StatusCode(501);
-        //    }
-        //    return BadRequest();
-        //}
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, FarmDTO farmDTO)
+        {
+            farmDTO.Id = id;
+            (farmDTO, int i) = await farmService.Update(farmDTO);
+            if (i == 1)
+            {
+                return Ok(farmDTO);
+            }
+            else if (i == 0)
+            {
+                return NotFound("Farm Not Found");
+            }
+            else if (i == 2)
+            {
+                return StatusCode(501);
+            }
+            return BadRequest();
+        }
         [HttpGet("{id}/FarmProducts")]
         public async Task<ActionResult> FarmProducts(int id)
         {
