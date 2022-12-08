@@ -19,6 +19,6 @@ namespace LocalGoods.DAL.ViewModel
         [Required]
         public string Password { get; set; }
         [Required]
-        public string Role { get; set; }
+        public bool IsFarmer { get; set; }
     }
 }

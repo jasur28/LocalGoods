@@ -83,6 +83,17 @@ namespace LocalGoods.Controllers
             }
             return Ok(dtos);
         }
+        [HttpPost("UserId/BecomeAFarmer")]
+        public async Task<ActionResult> BecomeAFarmer(string UserId)
+        {
+            User user = await userManager.FindByIdAsync(UserId);
+            IdentityResult result=await userManager.AddToRoleAsync(user, DAL.Helpers.UserRoles.Farmer);
+            if(result.Succeeded)
+            {
+                return Ok(user);
+            }
+            return StatusCode(501);
+        }
 
         //[HttpPut("{id}")]
         //public async Task<ActionResult<UserDTO>> Update(int id, UserDTO farmerDTO)

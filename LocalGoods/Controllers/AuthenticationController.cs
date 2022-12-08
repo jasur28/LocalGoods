@@ -64,22 +64,20 @@ namespace LocalGoods.Controllers
 
             if (result.Succeeded)
             {
-                //Add user role
-                switch(registerVM.Role)
+                var result1=await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+                if(result1.Succeeded)
                 {
-                    case UserRoles.Farmer:
-                        await _userManager.AddToRoleAsync(newUser, UserRoles.Farmer);
-                        break;
-                    case UserRoles.User:
-                        await _userManager.AddToRoleAsync(newUser, UserRoles.User);
-                        break;
-                    case UserRoles.Admin:
-                        await _userManager.AddToRoleAsync(newUser, UserRoles.Admin);
-                        break;
-                    default:
-                        break;
-
+                    if (registerVM.IsFarmer)
+                    {
+                        var result2 = await _userManager.AddToRoleAsync(newUser, UserRoles.Farmer);
+                        if (result2.Succeeded)
+                        {
+                            return Ok("Farmer created(L2)");
+                        }
+                    }
+                    return Ok("User Created(L1)");
                 }
+               
                 //await _userManager.AddToRoleAsync(newUser, DAL.Helpers.UserRoles.User);
                 return Ok("User created");
             }

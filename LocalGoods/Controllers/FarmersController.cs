@@ -38,18 +38,24 @@ namespace LocalGoods.Controllers
             }
             return NotFound("Farmer Not Found");
         }
-        [HttpPost("UserId")]
-        public async Task<ActionResult> AssignFarmerRole(string UserId)
-        {
-            User user=await farmerManager.FindByIdAsync(UserId);
-            await farmerManager.AddToRoleAsync(user, DAL.Helpers.UserRoles.Farmer);
-            return Ok(user);
-        }
         [HttpGet]
         public async Task<ActionResult> AllFarmers()
         {
             var farmers=await farmerManager.GetUsersInRoleAsync(DAL.Helpers.UserRoles.Farmer);
-            return Ok(farmers);
+            List<FarmerDTO> dtos = new List<FarmerDTO>();
+            foreach (var farmer in farmers)
+            {
+                FarmerDTO farmerDTO = new()
+                {
+                    Id = farmer.Id,
+                    UserName = farmer.UserName,
+                    Email = farmer.Email,
+                    Roles = await farmerManager.GetRolesAsync(farmer),
+                };
+                dtos.Add(farmerDTO);
+            }
+
+            return Ok(dtos);
         }
     }
 }
