@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Azure.Identity;
+using LocalGoods.DAL.Helpers;
 #nullable disable
 namespace LocalGoods.DAL.Models
 {
     public class User : IdentityUser
     {
-        [Required]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
@@ -23,5 +23,6 @@ namespace LocalGoods.DAL.Models
         public string FaceBook { get; set; }
         public string Instagram { get; set; }
         public ICollection<Farm> Farms { get; set; }
+       // public ICollection<UserRoles> Roles { get; set; }
     }
 }

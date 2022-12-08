@@ -15,13 +15,16 @@ namespace LocalGoods.DAL.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public Decimal Price { get; set; }
+        [Required]
+        public double Price { get; set; }
+        [Required]
         public string Description { get; set; }
-        public int Surplus { get; set; }
+        [Required]
         public string Image { get; set; }
         public int CategoryId { get; set; }
         public int FarmId { get; set; }
-        public int QuantityTypeId { get; set; }
+        public int? Surplus { get; set; } = 100;
+        public int QuantityTypeId { get; set; } =1;
         public Farm Farm { get; set; }
         public QuantityType QuantityType { get; set; }  
         public Category Category { get; set; }

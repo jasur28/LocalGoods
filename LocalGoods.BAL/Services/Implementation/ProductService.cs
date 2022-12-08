@@ -29,11 +29,9 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 Name = productDTO.Name,
                 Price = productDTO.Price,
-                Surplus = productDTO.Surplus,
                 Description = productDTO.Description,   
                 Image = productDTO.Image,
                 CategoryId=productDTO.CategoryId,
-                QuantityTypeId=productDTO.QuantityTypeId,
                 FarmId=productDTO.FarmId,
             };
             Farm? farm = await farmRepository.GetById(productDTO.FarmId);
@@ -60,11 +58,11 @@ namespace LocalGoods.BAL.Services.Implementation
                     Name=product.Name,
                     CategoryId=product.CategoryId,
                     Image=product.Image,
-                    QuantityTypeId=product.QuantityTypeId,
-                    Surplus=product.Surplus,
                     FarmId=product.FarmId,
                     Description=product.Description,
                     Price=product.Price
+                    //QuantityTypeId = product.QuantityTypeId,
+                    //Surplus = product.Surplus,
                 };
                 return productDTO;
             }
@@ -83,11 +81,11 @@ namespace LocalGoods.BAL.Services.Implementation
                    Name=product.Name,
                    CategoryId=product.CategoryId,
                    Image = product.Image,
-                   QuantityTypeId = product.QuantityTypeId,
                    FarmId=product.FarmId,
                    Description=product.Description,
                    Price=product.Price,
-                   Surplus=product.Surplus
+                   //Surplus=product.Surplus
+                   //QuantityTypeId = product.QuantityTypeId,
                 };
                 productDTOs.Add(productDTO);
             }
@@ -107,10 +105,10 @@ namespace LocalGoods.BAL.Services.Implementation
                 Name = productDTO.Name,
                 CategoryId = productDTO.CategoryId,
                 Image=productDTO.Image,
-                QuantityTypeId=productDTO.QuantityTypeId,
-                Surplus=productDTO.Surplus,
                 Description=productDTO.Description,
                 Price=productDTO.Price,
+                // QuantityTypeId=productDTO.QuantityTypeId,
+                //Surplus=productDTO.Surplus,
             };
             int i = await productRepository.Update(product);
             return (productDTO, i);
