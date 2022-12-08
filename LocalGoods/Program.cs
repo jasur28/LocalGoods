@@ -88,7 +88,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 //Seed the Database
+
 AppDbInitializer.SeedRolesToDb(app).Wait();
+AppDbInitializer.SeedQuantityTypesToDb(app).Wait();
+AppDbInitializer.SeedCategoriesToDb(app).Wait();
 
 app.MapControllers();
 

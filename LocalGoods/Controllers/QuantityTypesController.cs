@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LocalGoods.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+   // [Route("api/[controller]")]
     public class QuantityTypesController : ControllerBase
     {
         private readonly IQuantityTypeService QuantityTypeService;
@@ -16,7 +15,7 @@ namespace LocalGoods.Controllers
             this.QuantityTypeService = QuantityTypeService;
         }
 
-        [HttpPost]
+      //  [HttpPost]
         public async Task<ActionResult<QuantityTypeDTO>> Create(QuantityTypeDTO QuantityType)
         {
             if (QuantityType is null)
@@ -25,7 +24,7 @@ namespace LocalGoods.Controllers
             return Ok(QuantityType);
         }
 
-        [HttpGet("GetById/{id}")]
+       // [HttpGet("GetById/{id}")]
         public async Task<ActionResult<FarmDTO>> GetById(int? id)
         {
             if (id == null)
@@ -38,7 +37,7 @@ namespace LocalGoods.Controllers
             return Ok(QuantityType);
         }
 
-        [HttpDelete]
+//        [HttpDelete]
         public async Task<ActionResult<bool>> Delete(int? id)
         {
             if (id == null)
@@ -48,12 +47,12 @@ namespace LocalGoods.Controllers
             bool i = await QuantityTypeService.Delete((int)id);
             return Ok(i);
         }
-        [HttpGet]
+  //      [HttpGet]
         public async Task<ActionResult<List<QuantityTypeDTO>>> GetAll()
         {
             return Ok(await QuantityTypeService.GetAll());
         }
-        [HttpPut("Update/{id}")]
+     //   [HttpPut("Update/{id}")]
         public async Task<ActionResult> Update(int id, QuantityTypeDTO? QuantityType)
         {
             if (QuantityType is null)
