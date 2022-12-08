@@ -19,20 +19,29 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public ProductService(IProductRepository productRepository, IFarmRepository farmRepository)
         {
-            this.productRepository=productRepository;
-            this.farmRepository=farmRepository;
+            this.productRepository = productRepository;
+            this.farmRepository = farmRepository;
         }
 
-        public async Task<(ProductDTO,int)> Create(ProductDTO productDTO)
+        public async Task<(ProductDTO, int)> Create(ProductDTO productDTO)
         {
             Product? product = new Product()
             {
                 Name = productDTO.Name,
                 Price = productDTO.Price,
-                Description = productDTO.Description,   
+
+                //Surplus = productDTO.Surplus,
+                Description = productDTO.Description,
                 Image = productDTO.Image,
-                CategoryId=productDTO.CategoryId,
-                FarmId=productDTO.FarmId,
+                CategoryId = productDTO.CategoryId,
+                //QuantityTypeId = productDTO.QuantityTypeId,
+                FarmId = productDTO.FarmId,
+
+                //Description = productDTO.Description,   
+                //Image = productDTO.Image,
+                //CategoryId=productDTO.CategoryId,
+                //FarmId=productDTO.FarmId,
+
             };
             Farm? farm = await farmRepository.GetById(productDTO.FarmId);
             if (farm == null)
@@ -50,11 +59,21 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<ProductDTO?> Get(int id)
         {
             Product? product = await productRepository.GetById(id);
-            if(product!=null)
+            if (product != null)
             {
                 ProductDTO productDTO = new()
                 {
                     Id = product.Id,
+
+                    //Name = product.Name,
+                    //CategoryId = product.CategoryId,
+                    //Image = product.Image,
+                    //QuantityTypeId = product.QuantityTypeId,
+                    //Surplus = product.Surplus,
+                    //FarmId = product.FarmId,
+                    //Description = product.Description,
+                    //Price = product.Price
+
                     Name=product.Name,
                     CategoryId=product.CategoryId,
                     Image=product.Image,
@@ -63,6 +82,7 @@ namespace LocalGoods.BAL.Services.Implementation
                     Price=product.Price
                     //QuantityTypeId = product.QuantityTypeId,
                     //Surplus = product.Surplus,
+
                 };
                 return productDTO;
             }
@@ -77,6 +97,17 @@ namespace LocalGoods.BAL.Services.Implementation
             {
                 ProductDTO productDTO = new()
                 {
+
+                    //Id = product.Id,
+                    //Name = product.Name,
+                    //CategoryId = product.CategoryId,
+                    //Image = product.Image,
+                    //QuantityTypeId = product.QuantityTypeId,
+                    //FarmId = product.FarmId,
+                    //Description = product.Description,
+                    //Price = product.Price,
+                    //Surplus = product.Surplus
+
                    Id=product.Id,
                    Name=product.Name,
                    CategoryId=product.CategoryId,
@@ -86,6 +117,7 @@ namespace LocalGoods.BAL.Services.Implementation
                    Price=product.Price,
                    //Surplus=product.Surplus
                    //QuantityTypeId = product.QuantityTypeId,
+
                 };
                 productDTOs.Add(productDTO);
             }
@@ -97,19 +129,41 @@ namespace LocalGoods.BAL.Services.Implementation
             return await productRepository.Delete(id);
         }
 
-        public async Task<(ProductDTO,int)> Update(ProductDTO productDTO)
+        public async Task<(ProductDTO, int)> Update(ProductDTO productDTO)
         {
-            Product product = new()
-            {
-                Id = productDTO.Id,
-                Name = productDTO.Name,
-                CategoryId = productDTO.CategoryId,
-                Image=productDTO.Image,
-                Description=productDTO.Description,
-                Price=productDTO.Price,
+
+            var product = await productRepository.GetById(productDTO.Id);
+            product.Name = productDTO.Name;
+            product.CategoryId = productDTO.CategoryId;
+            product.Image = productDTO.Image;
+            product.QuantityTypeId = productDTO.QuantityTypeId;
+            product.Surplus = productDTO.Surplus;
+            product.Description = productDTO.Description;
+            product.Price = productDTO.Price;
+            //Product product = new()
+            //{
+            //    Id = productDTO.Id,
+            //    Name = productDTO.Name,
+            //    CategoryId = productDTO.CategoryId,
+            //    Image=productDTO.Image,
+            //    QuantityTypeId=productDTO.QuantityTypeId,
+            //    Surplus=productDTO.Surplus,
+            //    Description=productDTO.Description,
+            //    Price=productDTO.Price,
+            //};
+
+            //Product product = new()
+            //{
+            //    Id = productDTO.Id,
+            //    Name = productDTO.Name,
+            //    CategoryId = productDTO.CategoryId,
+            //    Image=productDTO.Image,
+            //    Description=productDTO.Description,
+            //    Price=productDTO.Price,
                 // QuantityTypeId=productDTO.QuantityTypeId,
                 //Surplus=productDTO.Surplus,
-            };
+            //};
+
             int i = await productRepository.Update(product);
             return (productDTO, i);
         }

@@ -67,7 +67,8 @@ namespace LocalGoods.DAL.Repositories
                 {
                     try
                     {
-                        _context.Entry(category1).State = EntityState.Modified;
+                        //_context.Entry(category1).State = EntityState.Modified;
+                        _context.Categories.Update(category1);
                         await _context.SaveChangesAsync();
                         return 1;
                     }

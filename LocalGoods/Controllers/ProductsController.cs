@@ -78,28 +78,30 @@ namespace LocalGoods.Controllers
             return Ok(await productService.GetAll());
         }
         //Under Development
-        //[HttpPut("Update/{id}")]
-        //public async Task<ActionResult> Update(int id,ProductDTO? product)
-        //{
-        //    if (product is null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    product.Id = id;
-        //    (product, int a) = await productService.Update(product);
-        //    if (a == 1)
-        //    {
-        //        return Ok(product);
-        //    }
-        //    else if (a == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    else if (a == 2)
-        //    {
-        //        return StatusCode(501);
-        //    }
-        //    return BadRequest();
-        //}
+        [HttpPut("Update/{id}")]
+        public async Task<ActionResult> Update(int id, ProductDTO? product)
+        {
+            if (product is null)
+            {
+                return BadRequest();
+            }
+
+
+            product.Id = id;
+            (product, int a) = await productService.Update(product);
+            if (a == 1)
+            {
+                return Ok(product);
+            }
+            else if (a == 0)
+            {
+                return NotFound();
+            }
+            else if (a == 2)
+            {
+                return StatusCode(501);
+            }
+            return BadRequest();
+        }
     }
 }

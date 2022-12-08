@@ -84,7 +84,6 @@ namespace LocalGoods.Controllers
             return Ok(dtos);
         }
 
-
         //[HttpPut("{id}")]
         //public async Task<ActionResult<UserDTO>> Update(int id, UserDTO farmerDTO)
         //{
