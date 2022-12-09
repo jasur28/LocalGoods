@@ -8,7 +8,6 @@ namespace LocalGoods.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoryService;
@@ -18,6 +17,7 @@ namespace LocalGoods.Controllers
             this.categoryService = categoryService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<CategoryDTO>> Create(CategoryDTO category)
         {
@@ -40,6 +40,7 @@ namespace LocalGoods.Controllers
             return Ok(category);
         }
 
+        [Authorize]
         [HttpDelete]
         public async Task<ActionResult<bool>> Delete(int? id)
         {
@@ -67,6 +68,8 @@ namespace LocalGoods.Controllers
         {
             return Ok(await categoryService.GetAll());
         }
+
+        [Authorize]
         [HttpPut("Update/{id}")]
         public async Task<ActionResult> Update(int id, CategoryDTO category)
         {

@@ -27,7 +27,15 @@ namespace LocalGoods.Controllers
         public async Task<ActionResult<UserDTO>> GetIdBySession()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return Ok(userId);
+            User user = await userManager.FindByIdAsync(userId);
+            UserDTO dto = new()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Roles = await userManager.GetRolesAsync(user),
+            };
+            return Ok(dto);
         }
 
         [HttpGet("{id}")]
@@ -52,6 +60,7 @@ namespace LocalGoods.Controllers
             return Ok(dto);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(string id)
         {
@@ -93,6 +102,8 @@ namespace LocalGoods.Controllers
             }
             return Ok(dtos);
         }
+
+        [Authorize]
         [HttpPost("UserId/BecomeAFarmer")]
         public async Task<ActionResult> BecomeAFarmer(string UserId)
         {
@@ -105,6 +116,7 @@ namespace LocalGoods.Controllers
             return StatusCode(501);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> Update(string id, UserDTO userDTO)
         {

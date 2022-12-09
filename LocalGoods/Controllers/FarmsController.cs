@@ -12,7 +12,6 @@ namespace LocalGoods.Controllers
     
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class FarmsController : ControllerBase
     {
         private readonly UserManager<User> userManager;
@@ -26,6 +25,7 @@ namespace LocalGoods.Controllers
             this.userManager = userManager;
         }
 
+        [Authorize]
         [HttpPost("{UserId}")]
         public async Task<ActionResult<FarmDTO>> Create(string UserId, FarmDTO farmDTO)
         {
@@ -53,7 +53,6 @@ namespace LocalGoods.Controllers
         {
             return Ok(await farmService.GetAll());
         }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<FarmDTO>> GetById(int id)
         {
@@ -64,7 +63,7 @@ namespace LocalGoods.Controllers
             }
             return Ok(farm);
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> Delete(int id)
         {
@@ -83,7 +82,7 @@ namespace LocalGoods.Controllers
             }
             return BadRequest();
          }
-        //Under development
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, FarmDTO farmDTO)
         {
