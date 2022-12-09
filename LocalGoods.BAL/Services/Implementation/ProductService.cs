@@ -4,6 +4,8 @@ using LocalGoods.DAL.Interfaces;
 using LocalGoods.DAL.Models;
 using LocalGoods.DAL.Operations;
 using LocalGoods.DAL.Repositories;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,23 +18,25 @@ namespace LocalGoods.BAL.Services.Implementation
     {
         private readonly IProductRepository productRepository;
         private readonly IFarmRepository farmRepository;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductService(IProductRepository productRepository, IFarmRepository farmRepository)
+        public ProductService(IProductRepository productRepository, IFarmRepository farmRepository,IWebHostEnvironment webHostEnvironment)
         {
             this.productRepository = productRepository;
             this.farmRepository = farmRepository;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<(ProductDTO, int)> Create(ProductDTO productDTO)
+        public async Task<(ProductDTO, int)> Create(ProductDTO productDTO,string name)
         {
             Product? product = new Product()
             {
                 Name = productDTO.Name,
                 Price = productDTO.Price,
-
+                Image = name,
                 //Surplus = productDTO.Surplus,
                 Description = productDTO.Description,
-                Image = productDTO.Image,
+               // Image = productDTO.Image,
                 CategoryId = productDTO.CategoryId,
                 //QuantityTypeId = productDTO.QuantityTypeId,
                 FarmId = productDTO.FarmId,
@@ -61,57 +65,33 @@ namespace LocalGoods.BAL.Services.Implementation
             Product? product = await productRepository.GetById(id);
             if (product != null)
             {
-                ProductDTO productDTO = new()
+                ViewProductDTO productDTO = new()
                 {
                     Id = product.Id,
-
-                    //Name = product.Name,
-                    //CategoryId = product.CategoryId,
-                    //Image = product.Image,
-                    //QuantityTypeId = product.QuantityTypeId,
-                    //Surplus = product.Surplus,
-                    //FarmId = product.FarmId,
-                    //Description = product.Description,
-                    //Price = product.Price
-
                     Name=product.Name,
                     CategoryId=product.CategoryId,
-                    Image=product.Image,
+                    ImagePath = Directory.GetCurrentDirectory() + "/Images/Products/" + product.Image,
                     FarmId=product.FarmId,
                     Description=product.Description,
                     Price=product.Price
-                    //QuantityTypeId = product.QuantityTypeId,
-                    //Surplus = product.Surplus,
-
                 };
                 return productDTO;
             }
             return null;
         }
 
-        public async Task<List<ProductDTO>> GetAll()
+        public async Task<List<ViewProductDTO>> GetAll()
         {
-            List<ProductDTO> productDTOs = new();
+            List<ViewProductDTO> productDTOs = new();
             IEnumerable<Product> products = await productRepository.GetAll();
             foreach (Product product in products)
             {
-                ProductDTO productDTO = new()
+                ViewProductDTO productDTO = new()
                 {
-
-                    //Id = product.Id,
-                    //Name = product.Name,
-                    //CategoryId = product.CategoryId,
-                    //Image = product.Image,
-                    //QuantityTypeId = product.QuantityTypeId,
-                    //FarmId = product.FarmId,
-                    //Description = product.Description,
-                    //Price = product.Price,
-                    //Surplus = product.Surplus
-
                    Id=product.Id,
                    Name=product.Name,
                    CategoryId=product.CategoryId,
-                   Image = product.Image,
+                   ImagePath = Directory.GetCurrentDirectory()+"/Images/Products/"+product.Image,
                    FarmId=product.FarmId,
                    Description=product.Description,
                    Price=product.Price,
@@ -139,7 +119,7 @@ namespace LocalGoods.BAL.Services.Implementation
             }
             product.Name = productDTO.Name;
             product.CategoryId = productDTO.CategoryId;
-            product.Image = productDTO.Image;
+           // product.Image = productDTO.Image;
             //product.QuantityTypeId = productDTO.QuantityTypeId;
             //product.Surplus = productDTO.Surplus;
             product.Description = productDTO.Description;

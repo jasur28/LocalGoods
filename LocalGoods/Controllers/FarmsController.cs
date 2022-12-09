@@ -4,6 +4,7 @@ using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using NuGet.Protocol;
 
 namespace LocalGoods.Controllers
@@ -16,38 +17,45 @@ namespace LocalGoods.Controllers
         private readonly UserManager<User> userManager;
         private readonly IFarmService farmService;
         private readonly IProductService productService;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public FarmsController(IFarmService farmService,IProductService productService, UserManager<User> userManager)
+        public FarmsController(IFarmService farmService,IProductService productService, UserManager<User> userManager,IWebHostEnvironment webHostEnvironment)
         {
             this.farmService = farmService;
             this.productService = productService;
             this.userManager = userManager;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpPost("{UserId}")]
-        public async Task<ActionResult<FarmDTO>> Create(string UserId, FarmDTO farmDTO)
+        public async Task<ActionResult<ViewFarmDTO>> Create(string UserId,[FromForm]CreateFarmDTO farmDTO)
         {
-            farmDTO.UserId = UserId;
-            (FarmDTO createdFarm,int i) = await farmService.Create(farmDTO);
-            if(i==0)
+            if(ModelState.IsValid)
             {
-                return NotFound("User Not Found");
+                string uniqueFileName=ProcessUploadedFile(farmDTO);
+                farmDTO.UserId = UserId;
+                (FarmDTO createdFarm, int i) = await farmService.Create(farmDTO,uniqueFileName);
+                if (i == 0)
+                {
+                    return NotFound("User Not Found");
+                }
+                else if (i == 1)
+                {
+                    return Ok(createdFarm);
+                }
+                else if (i == 2)
+                {
+                    return StatusCode(501);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-            else if(i==1)
-            {
-                return Ok(createdFarm);
-            }
-            else if(i==2)
-            {
-                return StatusCode(501);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
         [HttpGet]
-        public async Task<ActionResult<List<FarmDTO>>> Get()
+        public async Task<ActionResult<List<ViewFarmDTO>>> Get()
         {
             return Ok(await farmService.GetAll());
         }
@@ -114,6 +122,22 @@ namespace LocalGoods.Controllers
                 return Ok(products);
             }
             return Ok(products);
+        }
+        private string ProcessUploadedFile(CreateFarmDTO model)
+        {
+            string uniqueFileName = "";
+
+            if (model.ImageFile != null)
+            {
+                string uploadsFolder = webHostEnvironment.WebRootPath;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ImageFile.FileName;
+                string filePath = Path.Combine(uploadsFolder + "/Images/Farms/" + uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.ImageFile.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
     }
 }

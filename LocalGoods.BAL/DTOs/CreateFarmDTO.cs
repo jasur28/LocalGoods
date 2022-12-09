@@ -1,10 +1,12 @@
 ﻿#nullable disable
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+
 namespace LocalGoods.BAL.DTOs
 {
-    public class CreateFarmDTO
+    public class CreateFarmDTO : FarmDTO
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public int FarmerId { get; set; }
+        [Required]
+        public IFormFile ImageFile { get; set; }
     }
 }

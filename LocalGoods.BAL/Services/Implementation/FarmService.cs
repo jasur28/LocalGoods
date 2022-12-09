@@ -17,7 +17,7 @@ namespace LocalGoods.BAL.Services.Implementation
             _farmRepository = farmRepository;
             this.userManager=userManager;
         }
-        public async Task<(FarmDTO,int)> Create(FarmDTO farmDTO)
+        public async Task<(FarmDTO,int)> Create(CreateFarmDTO farmDTO,string name)
         {
             Farm? farm = new()
             {
@@ -26,7 +26,7 @@ namespace LocalGoods.BAL.Services.Implementation
                 Address = farmDTO.Address,
                 UserId= farmDTO.UserId,
                 Email = farmDTO.Email,
-                Image=farmDTO.Image,
+                Image=name,
                 City = farmDTO.City,
                 Longitude = farmDTO.Longitude,
                 Latitude = farmDTO.Latitude,
@@ -43,12 +43,12 @@ namespace LocalGoods.BAL.Services.Implementation
             }
             return (farmDTO, 2);
         }
-        public async Task<FarmDTO?> Get(int id)
+        public async Task<ViewFarmDTO?> Get(int id)
         {
             Farm? farm=await _farmRepository.GetById(id);
             if (farm == null)
                 return null;
-            FarmDTO farmDTO = new()
+            ViewFarmDTO farmDTO = new()
             {
                 Id = farm.Id,
                 Name = farm.Name,
@@ -56,27 +56,27 @@ namespace LocalGoods.BAL.Services.Implementation
                 Address = farm.Address,
                 UserId=farm.UserId,
                 City=farm.City,
-                Image=farm.Image,
+                ImagePath= Directory.GetCurrentDirectory() + "/Images/Farms/" + farm.Image,
                 Country = farm.Country, 
                 Latitude=farm.Latitude,
                 Longitude=farm.Longitude,
                 Email=farm.Email,   
                 CreatedOn=farm.CreatedOn,   
                 FaceBook = farm.FaceBook,
-               // Rating=farm.Rating,
+                Rating=farm.Rating,
                 Instagram=farm.Instagram,
                 Telephone=farm.Telephone
             };
             return farmDTO; 
         }
 
-        public async Task<List<FarmDTO>> GetAll()
+        public async Task<List<ViewFarmDTO>> GetAll()
         {
-            List<FarmDTO> farmDTOs = new List<FarmDTO>();
+            List<ViewFarmDTO> farmDTOs = new List<ViewFarmDTO>();
             IEnumerable<Farm> farms=await _farmRepository.GetAll();
             foreach (var farm in farms)
             {
-                FarmDTO farmDTO = new()
+                ViewFarmDTO farmDTO = new()
                 {
                     Id = farm.Id,
                     Name = farm.Name,
@@ -84,7 +84,7 @@ namespace LocalGoods.BAL.Services.Implementation
                     Address = farm.Address,
                     UserId=farm.UserId,
                     City = farm.City,
-                    Image = farm.Image,
+                    ImagePath = Directory.GetCurrentDirectory() + "/Images/Farms/" + farm.Image,
                     Country = farm.Country,
                     Latitude = farm.Latitude,
                     Longitude = farm.Longitude,
@@ -163,7 +163,7 @@ namespace LocalGoods.BAL.Services.Implementation
                     FarmId = product.FarmId,
                     Price = product.Price,
                     Description = product.Description,  
-                    Image = product.Image,
+                    //Image = product.Image,
                     Name = product.Name,
                     CategoryId = product.CategoryId,
                     //Surplus = product.Surplus,

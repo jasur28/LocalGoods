@@ -96,17 +96,17 @@ namespace LocalGoods.BAL.Services.Implementation
             int i = await categoryRepository.Update(category);
             return (categoryDTO,i);
         }
-        public async Task<(IEnumerable<ProductDTO>,int)> GetCategoryProducts(int id)
+        public async Task<(IEnumerable<ViewProductDTO>,int)> GetCategoryProducts(int id)
         {
             (IEnumerable<Product> products,int a) = await categoryRepository.GetCategoryProducts(id);
-            List<ProductDTO> productsDTOs = new();
+            List<ViewProductDTO> productsDTOs = new();
             foreach(Product product in products)
             {
-                productsDTOs.Add(new ProductDTO()
+                productsDTOs.Add(new ViewProductDTO()
                 {
                     Id= product.Id,
                     Name= product.Name,
-                    Image= product.Image,
+                    ImagePath= product.Image,
                     Description= product.Description,
                     FarmId=product.FarmId,
                     CategoryId=product.CategoryId,

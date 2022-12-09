@@ -1,4 +1,5 @@
 ﻿using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
@@ -22,14 +23,15 @@ namespace LocalGoods.BAL.DTOs
         public string Description { get; set; }
         [Required]
         public double Price { get; set; }
-        [Required]
-        public string Image { get; set; }
+        //[Required]
+        //public string Image { get; set; }
         [Required]
         public int CategoryId { get; set; }
         [SwaggerSchema(ReadOnly =true)]
         public int FarmId { get; set; }
         //public int QuantityTypeId { get; set; }
         //public int Surplus { get; set; }
+       
 
     }
 }

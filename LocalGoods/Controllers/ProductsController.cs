@@ -2,8 +2,10 @@
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 
 namespace LocalGoods.Controllers
 {
@@ -12,37 +14,45 @@ namespace LocalGoods.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService productService;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IWebHostEnvironment hostEnvironment)
         {
             this.productService = productService;
+            this.hostEnvironment = hostEnvironment;
         }
 
         [HttpPost("{FarmId}")]
-        public async Task<ActionResult<ProductDTO>> Create(int FarmId,ProductDTO productDTO)
+        public async Task<ActionResult<ProductDTO>> Create(int FarmId,[FromForm]CreateProductDTO productDTO)
         {
-            productDTO.FarmId = FarmId;
-            (ProductDTO createdProduct, int i) = await productService.Create(productDTO);
-            if (i == 0)
+            if(ModelState.IsValid)
             {
-                return NotFound("Farm Not Found");
+                string uniqueFileName = ProcessUploadedFile(productDTO);
+                productDTO.FarmId = FarmId;
+                (ProductDTO createdProduct, int i) = await productService.Create(productDTO,uniqueFileName);
+                if (i == 0)
+                {
+                    return NotFound("Farm Not Found");
+                }
+                else if (i == 1)
+                {
+                    return Ok(createdProduct);
+                }
+                else if (i == 2)
+                {
+                    return StatusCode(501, productDTO);
+                }
+                else
+                {
+                    return BadRequest(productDTO);
+                }
             }
-            else if (i == 1)
-            {
-                return Ok(createdProduct);
-            }
-            else if (i == 2)
-            {
-                return StatusCode(501,productDTO);
-            }
-            else
-            {
-                return BadRequest(productDTO);
-            }
+            return BadRequest(productDTO);
+           
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<FarmDTO>> GetById(int? id)
+        public async Task<ActionResult<CreateProductDTO>> GetById(int? id)
         {
             if (id == null)
             {
@@ -73,11 +83,10 @@ namespace LocalGoods.Controllers
             return BadRequest();
         }
         [HttpGet]
-        public async Task<ActionResult<List<ProductDTO>>> GetAll()
+        public async Task<ActionResult<List<ViewProductDTO>>> GetAll()
         {
             return Ok(await productService.GetAll());
         }
-        //Under Development
         [HttpPut("Update/{id}")]
         public async Task<ActionResult> Update(int id, ProductDTO? product)
         {
@@ -102,6 +111,22 @@ namespace LocalGoods.Controllers
                 return StatusCode(501);
             }
             return BadRequest();
+        }
+        private string ProcessUploadedFile(CreateProductDTO model)
+        {
+            string uniqueFileName="";
+
+            if (model.ImageFile != null)
+            {
+                string uploadsFolder = hostEnvironment.WebRootPath;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ImageFile.FileName;
+                string filePath = Path.Combine(uploadsFolder+"/Images/Products"+ uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.ImageFile.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
     }
 }

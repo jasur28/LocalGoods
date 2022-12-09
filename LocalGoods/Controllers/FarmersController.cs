@@ -25,14 +25,14 @@ namespace LocalGoods.Controllers
             this.roleManager = roleManager;
         }
         [HttpGet("{FarmerId}/Farms")]
-        public async Task<ActionResult<List<FarmDTO>>> GetAllFarms(string FarmerId)
+        public async Task<ActionResult<List<ViewFarmDTO>>> GetAllFarms(string FarmerId)
         {
             User farmer = await farmerManager.FindByIdAsync(FarmerId);
             var role=await roleManager.FindByIdAsync(DAL.Helpers.UserRoles.Farmer);
             
             if(farmer != null)
             {
-                List<FarmDTO> farmDTOs = await farmService.GetAll();
+                List<ViewFarmDTO> farmDTOs = await farmService.GetAll();
                 farmDTOs.Select(x => x.UserId == FarmerId);
                 return farmDTOs;
             }

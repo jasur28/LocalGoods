@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Images\58eb89e8-b437-4281-b3be-3a51e612cab9_PraveenPass.jpg" />
+    <None Include="wwwroot\Images\66b80aef-0cb6-4165-af39-017db4797b9f_PraveenPass.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LocalGoods.BAL\LocalGoods.BAL.csproj" />
     <ProjectReference Include="..\LocalGoods.DAL\LocalGoods.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\Farms\" />
+    <Folder Include="wwwroot\Images\Products\" />
   </ItemGroup>
 
 </Project>
