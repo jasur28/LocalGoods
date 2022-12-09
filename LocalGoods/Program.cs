@@ -16,7 +16,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+                      });
+});
 
 // Add services to the container.
 builder.Services.AddDbContext<LocalGoodsDbContext>(
@@ -90,9 +100,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();   
-app.UseAuthentication();
+app.UseRouting();
 
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 //Seed the Database
 
