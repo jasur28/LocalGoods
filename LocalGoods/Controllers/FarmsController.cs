@@ -2,6 +2,7 @@ using LocalGoods.BAL.DTOs;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,7 @@ namespace LocalGoods.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
+        [Authorize]
         [HttpPost("{UserId}")]
         public async Task<ActionResult<ViewFarmDTO>> Create(string UserId,[FromForm]CreateFarmDTO farmDTO)
         {
@@ -59,7 +61,6 @@ namespace LocalGoods.Controllers
         {
             return Ok(await farmService.GetAll());
         }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<FarmDTO>> GetById(int id)
         {
@@ -70,7 +71,7 @@ namespace LocalGoods.Controllers
             }
             return Ok(farm);
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> Delete(int id)
         {
@@ -89,7 +90,7 @@ namespace LocalGoods.Controllers
             }
             return BadRequest();
          }
-        //Under development
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, FarmDTO farmDTO)
         {

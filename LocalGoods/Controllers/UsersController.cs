@@ -3,10 +3,12 @@ using LocalGoods.BAL.DTOs.UserDTO;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LocalGoods.Controllers
 {
@@ -18,6 +20,21 @@ namespace LocalGoods.Controllers
         public UsersController(UserManager<User> userManager)
         {
             this.userManager = userManager;
+        }
+        [Authorize]
+        [HttpGet("getidbysession")]
+        public async Task<ActionResult<UserDTO>> GetIdBySession()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            User user = await userManager.FindByIdAsync(userId);
+            UserDTO dto = new()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Roles = await userManager.GetRolesAsync(user),
+            };
+            return Ok(dto);
         }
 
         [HttpGet("{id}")]
@@ -42,6 +59,7 @@ namespace LocalGoods.Controllers
             return Ok(dto);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(string id)
         {
@@ -83,6 +101,8 @@ namespace LocalGoods.Controllers
             }
             return Ok(dtos);
         }
+
+        [Authorize]
         [HttpPost("UserId/BecomeAFarmer")]
         public async Task<ActionResult> BecomeAFarmer(string UserId)
         {
@@ -95,6 +115,7 @@ namespace LocalGoods.Controllers
             return StatusCode(501);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> Update(string id, UserDTO userDTO)
         {
