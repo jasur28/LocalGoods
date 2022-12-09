@@ -12,7 +12,6 @@ using System.Security.Claims;
 
 namespace LocalGoods.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -22,7 +21,7 @@ namespace LocalGoods.Controllers
         {
             this.userManager = userManager;
         }
-
+        [Authorize]
         [HttpGet("getidbysession")]
         public async Task<ActionResult<UserDTO>> GetIdBySession()
         {
