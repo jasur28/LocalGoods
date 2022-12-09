@@ -10,9 +10,9 @@ using System.Runtime.CompilerServices;
 
 namespace LocalGoods.Controllers
 {
-    
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FarmersController : ControllerBase
     {
         private readonly UserManager<User> farmerManager;

@@ -3,13 +3,16 @@ using LocalGoods.BAL.DTOs.UserDTO;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LocalGoods.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -18,6 +21,13 @@ namespace LocalGoods.Controllers
         public UsersController(UserManager<User> userManager)
         {
             this.userManager = userManager;
+        }
+
+        [HttpGet("getidbysession")]
+        public async Task<ActionResult<UserDTO>> GetIdBySession()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return Ok(userId);
         }
 
         [HttpGet("{id}")]

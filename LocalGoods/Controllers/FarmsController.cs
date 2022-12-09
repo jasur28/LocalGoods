@@ -2,6 +2,7 @@ using LocalGoods.BAL.DTOs;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
@@ -11,6 +12,7 @@ namespace LocalGoods.Controllers
     
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FarmsController : ControllerBase
     {
         private readonly UserManager<User> userManager;
