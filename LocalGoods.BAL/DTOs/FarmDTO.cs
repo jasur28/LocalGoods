@@ -24,7 +24,6 @@ namespace LocalGoods.BAL.DTOs
         public double Latitude { get; set; }
         [Required]
         public double Longitude { get; set; }
-        public int? Rating { get; set; }
         [SwaggerSchema(ReadOnly = true)]
         public string UserId { get; set; }
         [Required]

@@ -2,11 +2,14 @@ using LocalGoods.BAL.DTOs;
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using NuGet.Protocol;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace LocalGoods.Controllers
 {
@@ -28,14 +31,15 @@ namespace LocalGoods.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        [Authorize]
-        [HttpPost("{UserId}")]
-        public async Task<ActionResult<ViewFarmDTO>> Create(string UserId,[FromForm]CreateFarmDTO farmDTO)
+        [Authorize(Roles ="Farmer")]
+        [HttpPost]
+        public async Task<ActionResult<ViewFarmDTO>> Create([FromForm]CreateFarmDTO farmDTO)
         {
             if(ModelState.IsValid)
             {
                 string uniqueFileName=ProcessUploadedFile(farmDTO);
-                farmDTO.UserId = UserId;
+                string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                farmDTO.UserId = Id;
                 (FarmDTO createdFarm, int i) = await farmService.Create(farmDTO,uniqueFileName);
                 if (i == 0)
                 {
@@ -71,10 +75,16 @@ namespace LocalGoods.Controllers
             }
             return Ok(farm);
         }
-        [Authorize]
+        [Authorize(Roles ="Farmer")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> Delete(int id)
         {
+            string uid= User.FindFirstValue(ClaimTypes.NameIdentifier);
+            FarmDTO? farm = await farmService.Get(id);
+            if(farm is not null && uid!=farm.UserId)
+            {
+                return Unauthorized();
+            }
             int i = await farmService.Delete((int)id);
             if(i==1)
             {
@@ -90,25 +100,36 @@ namespace LocalGoods.Controllers
             }
             return BadRequest();
          }
-        [Authorize]
+        [Authorize(Roles ="Farmer")]
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, FarmDTO farmDTO)
+        public async Task<ActionResult> Update(int id,[FromForm]CreateFarmDTO farmDTO)
         {
-            farmDTO.Id = id;
-            (farmDTO, int i) = await farmService.Update(farmDTO);
-            if (i == 1)
+           if(ModelState.IsValid)
             {
-                return Ok(farmDTO);
+                string uniqueFileName=ProcessUploadedFile(farmDTO);
+                string uid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                FarmDTO? farm = await farmService.Get(id);
+                if (farm is not null && uid != farm.UserId)
+                {
+                    return Unauthorized();
+                }
+                farmDTO.Id = id;
+                (FarmDTO viewfarmDTO, int i) = await farmService.Update(farmDTO,uniqueFileName);
+                if (i == 1)
+                {
+                    return Ok(farmDTO);
+                }
+                else if (i == 0)
+                {
+                    return NotFound("Farm Not Found");
+                }
+                else if (i == 2)
+                {
+                    return StatusCode(501, viewfarmDTO);
+                }
+                return BadRequest();
             }
-            else if (i == 0)
-            {
-                return NotFound("Farm Not Found");
-            }
-            else if (i == 2)
-            {
-                return StatusCode(501);
-            }
-            return BadRequest();
+            return StatusCode(501, farmDTO);
         }
         [HttpGet("{id}/FarmProducts")]
         public async Task<ActionResult> FarmProducts(int id)

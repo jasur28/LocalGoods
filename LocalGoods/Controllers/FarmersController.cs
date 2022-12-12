@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace LocalGoods.Controllers
 {
@@ -23,9 +24,11 @@ namespace LocalGoods.Controllers
             this.farmService = farmService;
             this.roleManager = roleManager;
         }
-        [HttpGet("{FarmerId}/Farms")]
-        public async Task<ActionResult<List<ViewFarmDTO>>> GetAllFarms(string FarmerId)
+        [Authorize(Roles = "Farmer")]
+        [HttpGet("/MyFarms")]
+        public async Task<ActionResult<List<ViewFarmDTO>>> GetMyFarms()
         {
+            string FarmerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User farmer = await farmerManager.FindByIdAsync(FarmerId);
             var role=await roleManager.FindByIdAsync(DAL.Helpers.UserRoles.Farmer);
             

@@ -107,7 +107,7 @@ namespace LocalGoods.BAL.Services.Implementation
             return await _farmRepository.Delete(id);
         }
 
-        public async Task<(FarmDTO,int)> Update(FarmDTO farmDTO)
+        public async Task<(FarmDTO,int)> Update(FarmDTO farmDTO,string name)
         {
             var farm = await _farmRepository.GetById(farmDTO.Id);
             if(farm is null)
@@ -125,21 +125,6 @@ namespace LocalGoods.BAL.Services.Implementation
             farm.Instagram = farmDTO.Instagram;
             farm.Latitude = farmDTO.Latitude;
             farm.Longitude = farmDTO.Longitude;
-            //Farm farm = new()
-            //{
-            //    Id = farmDTO.Id,
-            //    Name = farmDTO.Name,
-            //    Description=farmDTO.Description,
-            //    Address=farmDTO.Address,
-            //    City = farmDTO.City,
-            //    Country = farmDTO.Country,
-            //    Email=farmDTO.Email,
-            //    Telephone = farmDTO.Telephone,
-            //    FaceBook = farmDTO.FaceBook,
-            //    Instagram = farmDTO.Instagram,
-            //    Latitude=farmDTO.Latitude,
-            //    Longitude=farmDTO.Longitude
-            //};
             int i = await _farmRepository.Update(farm);
             farmDTO.UserId = farm.UserId;
             return (farmDTO, i);
