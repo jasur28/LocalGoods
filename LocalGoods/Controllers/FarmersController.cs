@@ -34,9 +34,9 @@ namespace LocalGoods.Controllers
             
             if(farmer != null)
             {
-                List<ViewFarmDTO> farmDTOs = await farmService.GetAll();
-                farmDTOs.Select(x => x.UserId == FarmerId);
-                return farmDTOs;
+                IEnumerable<ViewFarmDTO> farmDTOs = await farmService.GetAll();
+                farmDTOs = farmDTOs.Where(x => x.UserId == FarmerId);
+                return Ok(farmDTOs);
             }
             return NotFound("Farmer Not Found");
         }
