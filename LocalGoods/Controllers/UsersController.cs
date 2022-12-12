@@ -89,14 +89,6 @@ namespace LocalGoods.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     Roles = roles
-                    //TelePhone = user.PhoneNumber,
-                    //Address = user.Address,
-                    //City = user.City,
-                    //Country = user.Country,
-                    //FirstName = user.FirstName,
-                    //LastName = user.LastName,
-                    //Instagram = user.Instagram,
-                    //Facebook = user.FaceBook
                 });
             }
             return Ok(dtos);
@@ -125,6 +117,8 @@ namespace LocalGoods.Controllers
                 return NotFound("User Not Found");
             }
             User user = await userManager.FindByIdAsync(id);
+            string email=user.Email;
+            string username = user.UserName;
             var result=await userManager.SetEmailAsync(user,userDTO.Email);
             if (result.Succeeded)
             {
@@ -133,6 +127,9 @@ namespace LocalGoods.Controllers
                 {
                     return Ok(userDTO);
                 }
+                await userManager.SetEmailAsync(user,email);
+                await userManager.SetUserNameAsync(user,username);
+                return StatusCode(501, userDTO);
             }
             return StatusCode(501, new object[] { result });
         }

@@ -2,6 +2,7 @@
 using LocalGoods.BAL.Services.Implementation;
 using LocalGoods.BAL.Services.Interfaces;
 using LocalGoods.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -20,7 +21,7 @@ namespace LocalGoods.Controllers
             this.productService = productService;
             this.hostEnvironment = hostEnvironment;
         }
-        
+        [Authorize(Roles ="Farmer")]
         [HttpPost("{FarmId}")]
         public async Task<ActionResult<ProductDTO>> Create(int FarmId,[FromForm]CreateProductDTO productDTO)
         {
@@ -62,7 +63,7 @@ namespace LocalGoods.Controllers
                 return NotFound();
             return Ok(product);
         }
-
+        [Authorize(Roles ="Farmer")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
@@ -86,6 +87,7 @@ namespace LocalGoods.Controllers
         {
             return Ok(await productService.GetAll());
         }
+        [Authorize(Roles ="Farmer")]
         [HttpPut("Update/{id}")]
         public async Task<ActionResult> Update(int id, ProductDTO? product)
         {
@@ -119,7 +121,7 @@ namespace LocalGoods.Controllers
             {
                 string uploadsFolder = hostEnvironment.WebRootPath;
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ImageFile.FileName;
-                string filePath = Path.Combine(uploadsFolder+"/Images/Products"+ uniqueFileName);
+                string filePath = Path.Combine(uploadsFolder+"/Images/Products/"+ uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     model.ImageFile.CopyTo(fileStream);

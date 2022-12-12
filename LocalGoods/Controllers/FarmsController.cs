@@ -83,12 +83,12 @@ namespace LocalGoods.Controllers
             FarmDTO? farm = await farmService.Get(id);
             if(farm is not null && uid!=farm.UserId)
             {
-                return Unauthorized();
+                return BadRequest();
             }
             int i = await farmService.Delete((int)id);
             if(i==1)
             {
-                return Ok("Deleted Successfully");
+                return Ok(true);
             }
             else if(i==0)
             {
@@ -111,7 +111,7 @@ namespace LocalGoods.Controllers
                 FarmDTO? farm = await farmService.Get(id);
                 if (farm is not null && uid != farm.UserId)
                 {
-                    return Unauthorized();
+                    return BadRequest();
                 }
                 farmDTO.Id = id;
                 (FarmDTO viewfarmDTO, int i) = await farmService.Update(farmDTO,uniqueFileName);

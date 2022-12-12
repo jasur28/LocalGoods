@@ -34,17 +34,9 @@ namespace LocalGoods.BAL.Services.Implementation
                 Name = productDTO.Name,
                 Price = productDTO.Price,
                 Image = name,
-                //Surplus = productDTO.Surplus,
                 Description = productDTO.Description,
-               // Image = productDTO.Image,
                 CategoryId = productDTO.CategoryId,
-                //QuantityTypeId = productDTO.QuantityTypeId,
-                FarmId = productDTO.FarmId,
-
-                //Description = productDTO.Description,   
-                //Image = productDTO.Image,
-                //CategoryId=productDTO.CategoryId,
-                //FarmId=productDTO.FarmId,
+                FarmId = productDTO.FarmId
 
             };
             Farm? farm = await farmRepository.GetById(productDTO.FarmId);
@@ -70,7 +62,7 @@ namespace LocalGoods.BAL.Services.Implementation
                     Id = product.Id,
                     Name=product.Name,
                     CategoryId=product.CategoryId,
-                    ImagePath = Directory.GetCurrentDirectory() + "/Images/Products/" + product.Image,
+                    ImagePath = product.Image,
                     FarmId=product.FarmId,
                     Description=product.Description,
                     Price=product.Price
@@ -91,13 +83,10 @@ namespace LocalGoods.BAL.Services.Implementation
                    Id=product.Id,
                    Name=product.Name,
                    CategoryId=product.CategoryId,
-                   ImagePath = Directory.GetCurrentDirectory()+"/Images/Products/"+product.Image,
+                   ImagePath = product.Image,
                    FarmId=product.FarmId,
                    Description=product.Description,
-                   Price=product.Price,
-                   //Surplus=product.Surplus
-                   //QuantityTypeId = product.QuantityTypeId,
-
+                   Price=product.Price
                 };
                 productDTOs.Add(productDTO);
             }
@@ -119,35 +108,8 @@ namespace LocalGoods.BAL.Services.Implementation
             }
             product.Name = productDTO.Name;
             product.CategoryId = productDTO.CategoryId;
-           // product.Image = productDTO.Image;
-            //product.QuantityTypeId = productDTO.QuantityTypeId;
-            //product.Surplus = productDTO.Surplus;
             product.Description = productDTO.Description;
             product.Price = productDTO.Price;
-            //Product product = new()
-            //{
-            //    Id = productDTO.Id,
-            //    Name = productDTO.Name,
-            //    CategoryId = productDTO.CategoryId,
-            //    Image=productDTO.Image,
-            //    QuantityTypeId=productDTO.QuantityTypeId,
-            //    Surplus=productDTO.Surplus,
-            //    Description=productDTO.Description,
-            //    Price=productDTO.Price,
-            //};
-
-            //Product product = new()
-            //{
-            //    Id = productDTO.Id,
-            //    Name = productDTO.Name,
-            //    CategoryId = productDTO.CategoryId,
-            //    Image=productDTO.Image,
-            //    Description=productDTO.Description,
-            //    Price=productDTO.Price,
-                // QuantityTypeId=productDTO.QuantityTypeId,
-                //Surplus=productDTO.Surplus,
-            //};
-
             int i = await productRepository.Update(product);
             return (productDTO, i);
         }
