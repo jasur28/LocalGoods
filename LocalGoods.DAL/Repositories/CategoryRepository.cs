@@ -58,17 +58,16 @@ namespace LocalGoods.DAL.Repositories
             }
         }
 
-        public async Task<int> Update(Category category)
+        public async Task<int> Update(Category item)
         {
             try
             {
-                Category? category1 = await GetById(category.Id);
-                if(category1 != null)
+                Category? category = await GetById(item.Id);
+                if(category != null)
                 {
                     try
                     {
-                        //_context.Entry(category1).State = EntityState.Modified;
-                        _context.Categories.Update(category1);
+                        _context.Categories.Update(category);
                         await _context.SaveChangesAsync();
                         return 1;
                     }
