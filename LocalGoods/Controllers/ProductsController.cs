@@ -29,16 +29,16 @@ namespace LocalGoods.Controllers
             {
                 string uniqueFileName = ProcessUploadedFile(productDTO);
                 productDTO.FarmId = FarmId;
-                (ProductDTO createdProduct, int i) = await productService.Create(productDTO,uniqueFileName);
-                if (i == 0)
+                (ProductDTO createdProduct, int statusOfOperation) = await productService.Create(productDTO,uniqueFileName);
+                if (statusOfOperation == 0)
                 {
                     return NotFound("Farm Not Found");
                 }
-                else if (i == 1)
+                else if (statusOfOperation == 1)
                 {
                     return Ok(createdProduct);
                 }
-                else if (i == 2)
+                else if (statusOfOperation == 2)
                 {
                     return StatusCode(501, productDTO);
                 }
@@ -67,16 +67,16 @@ namespace LocalGoods.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
-            int i = await productService.Delete((int)id);
-            if (i == 1)
+            int statusOfOperation = await productService.Delete((int)id);
+            if (statusOfOperation == 1)
             {
                 return Ok("Deleted Successfully");
             }
-            else if (i == 0)
+            else if (statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if (i == 2)
+            else if (statusOfOperation == 2)
             {
                 return StatusCode(501);
             }
@@ -98,16 +98,16 @@ namespace LocalGoods.Controllers
 
 
             product.Id = id;
-            (product, int a) = await productService.Update(product);
-            if (a == 1)
+            (product, int statusOfOperation) = await productService.Update(product);
+            if (statusOfOperation == 1)
             {
                 return Ok(product);
             }
-            else if (a == 0)
+            else if (statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if (a == 2)
+            else if (statusOfOperation == 2)
             {
                 return StatusCode(501);
             }
