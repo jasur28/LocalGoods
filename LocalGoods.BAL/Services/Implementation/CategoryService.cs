@@ -80,21 +80,16 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<(CategoryDTO,int)> Update(CategoryDTO categoryDTO)
         {
             var category = await categoryRepository.GetById(categoryDTO.Id);
-            //category.Id = categoryDTO.Id;
+            
             if(category is null)
             {
                 return (categoryDTO,0);
             }
             category.Name = categoryDTO.Name;
             category.Description = categoryDTO.Description;
-            //Category category = new()
-            //{
-            //    Id = categoryDTO.Id,
-            //    Name = categoryDTO.Name,
-            //    Description = categoryDTO.Description,
-            //};
-            int i = await categoryRepository.Update(category);
-            return (categoryDTO,i);
+            
+            int statusOfOperation = await categoryRepository.Update(category);
+            return (categoryDTO, statusOfOperation);
         }
         public async Task<(IEnumerable<ViewProductDTO>,int)> GetCategoryProducts(int id)
         {
@@ -111,7 +106,6 @@ namespace LocalGoods.BAL.Services.Implementation
                     FarmId=product.FarmId,
                     CategoryId=product.CategoryId,
                     Price=product.Price
-                    //QuantityTypeId= product.QuantityTypeId,
                 });
             }
             return (productsDTOs,a);
