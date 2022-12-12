@@ -10,7 +10,6 @@ namespace LocalGoods.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService productService;
@@ -21,7 +20,7 @@ namespace LocalGoods.Controllers
             this.productService = productService;
             this.hostEnvironment = hostEnvironment;
         }
-
+        
         [HttpPost("{FarmId}")]
         public async Task<ActionResult<ProductDTO>> Create(int FarmId,[FromForm]CreateProductDTO productDTO)
         {

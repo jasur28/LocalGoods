@@ -72,13 +72,12 @@ namespace LocalGoods.Controllers
                         var result2 = await _userManager.AddToRoleAsync(newUser, UserRoles.Farmer);
                         if (result2.Succeeded)
                         {
-                            return Ok("Farmer created(L2)");
+                            return Ok("Farmer created");
                         }
                     }
-                    return Ok("User Created(L1)");
+                    return Ok("User Created");
                 }
                
-                //await _userManager.AddToRoleAsync(newUser, DAL.Helpers.UserRoles.User);
                 return Ok("User created");
             }
             return BadRequest("User could not be created");
@@ -200,7 +199,6 @@ namespace LocalGoods.Controllers
             };
 
             return response;
-
         }
     }
 }
