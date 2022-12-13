@@ -40,16 +40,16 @@ namespace LocalGoods.Controllers
                 string uniqueFileName=ProcessUploadedFile(farmDTO);
                 string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 farmDTO.UserId = Id;
-                (FarmDTO createdFarm, int i) = await farmService.Create(farmDTO,uniqueFileName);
-                if (i == 0)
+                (FarmDTO createdFarm, int statusOfOperation) = await farmService.Create(farmDTO,uniqueFileName);
+                if (statusOfOperation == 0)
                 {
                     return NotFound("User Not Found");
                 }
-                else if (i == 1)
+                else if (statusOfOperation == 1)
                 {
                     return Ok(createdFarm);
                 }
-                else if (i == 2)
+                else if (statusOfOperation == 2)
                 {
                     return StatusCode(501);
                 }
@@ -85,16 +85,16 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest();
             }
-            int i = await farmService.Delete((int)id);
-            if(i==1)
+            int statusOfOperation = await farmService.Delete((int)id);
+            if(statusOfOperation == 1)
             {
                 return Ok(true);
             }
-            else if(i==0)
+            else if(statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if(i==2)
+            else if(statusOfOperation == 2)
             {
                 return StatusCode(501);
             }
@@ -114,16 +114,16 @@ namespace LocalGoods.Controllers
                     return BadRequest();
                 }
                 farmDTO.Id = id;
-                (FarmDTO viewfarmDTO, int i) = await farmService.Update(farmDTO,uniqueFileName);
-                if (i == 1)
+                (FarmDTO viewfarmDTO, int statusOfOperation) = await farmService.Update(farmDTO,uniqueFileName);
+                if (statusOfOperation == 1)
                 {
                     return Ok(farmDTO);
                 }
-                else if (i == 0)
+                else if (statusOfOperation == 0)
                 {
                     return NotFound("Farm Not Found");
                 }
-                else if (i == 2)
+                else if (statusOfOperation == 2)
                 {
                     return StatusCode(501, viewfarmDTO);
                 }
@@ -134,12 +134,12 @@ namespace LocalGoods.Controllers
         [HttpGet("{id}/FarmProducts")]
         public async Task<ActionResult> FarmProducts(int id)
         {
-            (List<ProductDTO> products, int i) = await farmService.GetProducts(id);
-            if(i==0)
+            (List<ProductDTO> products, int statusOfOperation) = await farmService.GetProducts(id);
+            if(statusOfOperation == 0)
             {
                 return NotFound("Farm Not Found");
             }
-            else if(i==1)
+            else if(statusOfOperation == 1)
             {
                 return Ok(products);
             }

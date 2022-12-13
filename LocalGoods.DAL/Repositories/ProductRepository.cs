@@ -21,7 +21,6 @@ namespace LocalGoods.DAL.Repositories
 
         public async Task<(Product,bool)> Create(Product product)
         {
-           
                 try
                 {
                     await _context.Products.AddAsync(product);
@@ -66,18 +65,16 @@ namespace LocalGoods.DAL.Repositories
             }
         }
 
-        public async Task<int> Update(Product product)
+        public async Task<int> Update(Product item)
         {
             try
             {
-                Product? product1 = await GetById(product.Id);
-                if (product1 != null)
+                Product? product = await GetById(item.Id);
+                if (product != null)
                 {
                     try
                     {
-                        //_context.Entry(product1).State = EntityState.Modified;
-                        //  _context.Entry(product1).Property("FarmId").IsModified = false;
-                        _context.Products.Update(product1);
+                        _context.Products.Update(product);
                         await _context.SaveChangesAsync();
                         return 1;
                     }

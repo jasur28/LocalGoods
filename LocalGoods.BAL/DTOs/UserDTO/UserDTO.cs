@@ -13,16 +13,5 @@ namespace LocalGoods.BAL.DTOs.UserDTO
         public string Email { get; set; }
         [SwaggerSchema(ReadOnly =true)]
         public ICollection<string> Roles { get; set; }
-
-        //[Required]
-        //[MinLength(5)]
-        //public string FirstName { get; set; }
-        //public string LastName { get; set; }
-        //public string TelePhone { get; set; }
-        //public string Country { get; set; }
-        //public string City { get; set; }
-        //public string Address { get; set; }
-        //public string Instagram { get; set; }
-        //public string Facebook { get; set; }
     }
 }

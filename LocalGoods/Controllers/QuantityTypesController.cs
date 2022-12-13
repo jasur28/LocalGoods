@@ -44,8 +44,8 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest();
             }
-            bool i = await QuantityTypeService.Delete((int)id);
-            return Ok(i);
+            bool statusOfOperation = await QuantityTypeService.Delete((int)id);
+            return Ok(statusOfOperation);
         }
   //      [HttpGet]
         public async Task<ActionResult<List<QuantityTypeDTO>>> GetAll()

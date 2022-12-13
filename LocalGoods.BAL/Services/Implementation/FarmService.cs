@@ -148,11 +148,8 @@ namespace LocalGoods.BAL.Services.Implementation
                     FarmId = product.FarmId,
                     Price = product.Price,
                     Description = product.Description,  
-                    //Image = product.Image,
                     Name = product.Name,
                     CategoryId = product.CategoryId,
-                    //Surplus = product.Surplus,
-                    //QuantityTypeId = product.QuantityTypeId,
                 });
             }
             return (productdtos,1);

@@ -48,16 +48,16 @@ namespace LocalGoods.Controllers
             {
                 return BadRequest();
             }
-            int i = await categoryService.Delete((int)id);
-            if(i==0)
+            int statusOfOperation = await categoryService.Delete((int)id);
+            if(statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if(i==1)
+            else if(statusOfOperation == 1)
             {
                 return Ok("Deleted Successfully");
             }
-            else if(i==2)
+            else if(statusOfOperation == 2)
             {
                 return StatusCode(501);
             }
@@ -78,16 +78,16 @@ namespace LocalGoods.Controllers
                 return BadRequest();
             }
             category.Id = id;
-            (category,int a) = await categoryService.Update((CategoryDTO)category);
-            if (a==1)
+            (category,int statusOfOperation) = await categoryService.Update((CategoryDTO)category);
+            if (statusOfOperation == 1)
             {
                 return Ok(category);
             }
-            else if(a==0)
+            else if(statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if(a==2)
+            else if(statusOfOperation == 2)
             {
                 return StatusCode(501);
             }
@@ -96,12 +96,12 @@ namespace LocalGoods.Controllers
         [HttpGet("{id}/CategoryProducts")]
         public async Task<ActionResult<List<ProductDTO>>> GetCategoryProducts(int id)
         {
-            (IEnumerable<ProductDTO> products, int a) = await categoryService.GetCategoryProducts(id);
-            if(a == 0)
+            (IEnumerable<ProductDTO> products, int statusOfOperation) = await categoryService.GetCategoryProducts(id);
+            if(statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if(a==1)
+            else if(statusOfOperation == 1)
             {
                 return Ok(products);
             }

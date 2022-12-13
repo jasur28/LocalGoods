@@ -12,7 +12,6 @@ namespace LocalGoods.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService productService;
@@ -44,11 +43,11 @@ namespace LocalGoods.Controllers
                 {
                     return NotFound("Farm Not Found");
                 }
-                else if (i == 1)
+                else if (statusOfOperation == 1)
                 {
                     return Ok(createdProduct);
                 }
-                else if (i == 2)
+                else if (statusOfOperation == 2)
                 {
                     return StatusCode(501, productDTO);
                 }
@@ -77,16 +76,16 @@ namespace LocalGoods.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
-            int i = await productService.Delete((int)id);
-            if (i == 1)
+            int statusOfOperation = await productService.Delete((int)id);
+            if (statusOfOperation == 1)
             {
                 return Ok(true);
             }
-            else if (i == 0)
+            else if (statusOfOperation == 0)
             {
                 return NotFound();
             }
-            else if (i == 2)
+            else if (statusOfOperation == 2)
             {
                 return StatusCode(501);
             }

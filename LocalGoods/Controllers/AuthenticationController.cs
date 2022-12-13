@@ -210,7 +210,6 @@ namespace LocalGoods.Controllers
             };
 
             return response;
-
         }
     }
 }

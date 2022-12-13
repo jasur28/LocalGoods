@@ -61,20 +61,17 @@ namespace LocalGoods.DAL.Operations
                 return 0;
             }
         }
-        //Under development
-        public async Task<int> Update(Farm farm)
+        
+        public async Task<int> Update(Farm item)
         {
             try
             {
-                Farm? farm1= await GetById(farm.Id);
-                if (farm1 != null)
+                Farm? farm= await GetById(item.Id);
+                if (farm != null)
                 {
                     try
                     {
-                        //var entry = _context.Entry(farm);
-                        //entry.State = EntityState.Modified;
-                        // entry.Property("UserId").IsModified = false;
-                        _context.Farms.Update(farm1);
+                        _context.Farms.Update(farm);
                         await _context.SaveChangesAsync();
                         return 1;
                     }
