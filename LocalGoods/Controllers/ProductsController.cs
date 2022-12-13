@@ -39,7 +39,7 @@ namespace LocalGoods.Controllers
                     return BadRequest("Not permitted");
                 }
                 (ProductDTO createdProduct, int statusOfOperation) = await productService.Create(productDTO,uniqueFileName);
-                if (i == 0)
+                if (statusOfOperation == 0)
                 {
                     return NotFound("Farm Not Found");
                 }

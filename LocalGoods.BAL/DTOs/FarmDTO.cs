@@ -37,6 +37,6 @@ namespace LocalGoods.BAL.DTOs
         [Required]
         public string Instagram { get; set; }
         [SwaggerSchema(ReadOnly =true)]
-        public List<ProductDTO> Products { get; set; }
+        public List<ViewProductDTO> Products { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace LocalGoods.BAL.Services.Interfaces
         Task<(FarmDTO,int)> Update(FarmDTO farm,string name);
         Task<int> Delete(int id);
         Task<List<ViewFarmDTO>> GetAll();
-        Task<(List<ProductDTO>,int)> GetProducts(int id);
+        Task<(List<ViewProductDTO>,int)> GetProducts(int id);
     }
 }

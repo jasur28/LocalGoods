@@ -134,7 +134,7 @@ namespace LocalGoods.Controllers
         [HttpGet("{id}/FarmProducts")]
         public async Task<ActionResult> FarmProducts(int id)
         {
-            (List<ProductDTO> products, int statusOfOperation) = await farmService.GetProducts(id);
+            (List<ViewProductDTO> products, int statusOfOperation) = await farmService.GetProducts(id);
             if(statusOfOperation == 0)
             {
                 return NotFound("Farm Not Found");

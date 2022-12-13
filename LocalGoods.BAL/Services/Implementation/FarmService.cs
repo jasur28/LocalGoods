@@ -130,9 +130,9 @@ namespace LocalGoods.BAL.Services.Implementation
             return (farmDTO, i);
         }
 
-        public async Task<(List<ProductDTO>,int)> GetProducts(int id)
+        public async Task<(List<ViewProductDTO>,int)> GetProducts(int id)
         {
-            List<ProductDTO> productdtos = new();
+            List<ViewProductDTO> productdtos = new();
             Farm? farm = await _farmRepository.GetById(id);
             if(farm == null)
             {
@@ -142,7 +142,7 @@ namespace LocalGoods.BAL.Services.Implementation
             foreach(Product product in products1)
             {
                 int? fid = product.FarmId;
-                productdtos.Add(new ProductDTO()
+                productdtos.Add(new ViewProductDTO()
                 {
                     Id = product.Id,
                     FarmId = product.FarmId,
@@ -150,6 +150,7 @@ namespace LocalGoods.BAL.Services.Implementation
                     Description = product.Description,  
                     Name = product.Name,
                     CategoryId = product.CategoryId,
+                    ImagePath=product.Image
                 });
             }
             return (productdtos,1);
