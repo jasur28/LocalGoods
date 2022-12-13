@@ -16,7 +16,6 @@ namespace LocalGoods.DAL.Operations
 
         public async Task<(Farm,bool)> Create(Farm item)
         {
-            
                 try
                 {
                     await _context.Farms.AddAsync(item);
@@ -27,7 +26,6 @@ namespace LocalGoods.DAL.Operations
                 {
                     return (item, false);
                 }
-           
         }
 
         public async Task<IEnumerable<Farm>> GetAll()
