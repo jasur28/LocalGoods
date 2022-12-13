@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using System.Security.Claims;
 
 namespace LocalGoods.Controllers
 {
@@ -16,11 +17,13 @@ namespace LocalGoods.Controllers
     {
         private readonly IProductService productService;
         private readonly IWebHostEnvironment hostEnvironment;
+        private readonly IFarmService farmService;
 
-        public ProductsController(IProductService productService, IWebHostEnvironment hostEnvironment)
+        public ProductsController(IProductService productService, IWebHostEnvironment hostEnvironment, IFarmService farmService)
         {
             this.productService = productService;
             this.hostEnvironment = hostEnvironment;
+            this.farmService = farmService;
         }
         [Authorize(Roles ="Farmer")]
         [HttpPost("{FarmId}")]
@@ -30,6 +33,12 @@ namespace LocalGoods.Controllers
             {
                 string uniqueFileName = ProcessUploadedFile(productDTO);
                 productDTO.FarmId = FarmId;
+                string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                FarmDTO? farm = await farmService.Get(FarmId);
+                if(farm is not null && farm.UserId!= Id)
+                {
+                    return BadRequest("Not permitted");
+                }
                 (ProductDTO createdProduct, int i) = await productService.Create(productDTO,uniqueFileName);
                 if (i == 0)
                 {
@@ -71,7 +80,7 @@ namespace LocalGoods.Controllers
             int i = await productService.Delete((int)id);
             if (i == 1)
             {
-                return Ok("Deleted Successfully");
+                return Ok(true);
             }
             else if (i == 0)
             {
@@ -90,29 +99,43 @@ namespace LocalGoods.Controllers
         }
         [Authorize(Roles ="Farmer")]
         [HttpPut("Update/{id}")]
-        public async Task<ActionResult> Update(int id, ProductDTO? product)
+        public async Task<ActionResult> Update(int id, [FromForm]CreateProductDTO productDTO)
         {
-            if (product is null)
+            if(ModelState.IsValid)
             {
-                return BadRequest();
-            }
+                string uniqueFileName = ProcessUploadedFile(productDTO);
+                string uid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                ProductDTO? product = await productService.Get(id);
+                if (product is not null)
+                {
+                    FarmDTO? farm = await farmService.Get(product.FarmId);
+                    if(farm is not null && farm.UserId != uid)
+                    {
+                        return BadRequest();
+                    }
+                    productDTO.Id = id;
+                    (ProductDTO viewProductDTO, int i) = await productService.Update(productDTO, uniqueFileName);
+                    if (i == 1)
+                    {
+                        return Ok(viewProductDTO);
+                    }
+                    else if (i == 0)
+                    {
+                        return NotFound("Farm Not Found");
+                    }
+                    else if (i == 2)
+                    {
+                        return StatusCode(501, productDTO);
+                    }
+                    return BadRequest();
 
-
-            product.Id = id;
-            (product, int a) = await productService.Update(product);
-            if (a == 1)
-            {
-                return Ok(product);
+                }
+                else
+                {
+                    return NotFound("Product Not Found");
+                }
             }
-            else if (a == 0)
-            {
-                return NotFound();
-            }
-            else if (a == 2)
-            {
-                return StatusCode(501);
-            }
-            return BadRequest();
+            return BadRequest(productDTO);
         }
         private string ProcessUploadedFile(CreateProductDTO model)
         {

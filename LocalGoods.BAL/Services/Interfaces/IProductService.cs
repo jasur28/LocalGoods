@@ -11,7 +11,7 @@ namespace LocalGoods.BAL.Services.Interfaces
     {
         Task<(ProductDTO,int)> Create(ProductDTO product,string name);
         Task<ProductDTO?> Get(int id);
-        Task<(ProductDTO,int)> Update(ProductDTO product);
+        Task<(ProductDTO,int)> Update(ProductDTO product, string name);
         Task<int> Delete(int id);
         Task<List<ViewProductDTO>> GetAll();
     }

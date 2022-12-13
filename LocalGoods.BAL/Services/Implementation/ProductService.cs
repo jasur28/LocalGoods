@@ -98,7 +98,7 @@ namespace LocalGoods.BAL.Services.Implementation
             return await productRepository.Delete(id);
         }
 
-        public async Task<(ProductDTO, int)> Update(ProductDTO productDTO)
+        public async Task<(ProductDTO, int)> Update(ProductDTO productDTO, string name)
         {
 
             var product = await productRepository.GetById(productDTO.Id);
@@ -110,6 +110,7 @@ namespace LocalGoods.BAL.Services.Implementation
             product.CategoryId = productDTO.CategoryId;
             product.Description = productDTO.Description;
             product.Price = productDTO.Price;
+            product.Image=name;
             int i = await productRepository.Update(product);
             return (productDTO, i);
         }

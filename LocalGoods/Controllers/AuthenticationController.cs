@@ -23,6 +23,7 @@ namespace LocalGoods.Controllers
         private readonly LocalGoodsDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly TokenValidationParameters _tokenValidationParameters1;
+        private object success;
 
         public AuthenticationController(
                 UserManager<User> userManager,
@@ -72,14 +73,23 @@ namespace LocalGoods.Controllers
                         var result2 = await _userManager.AddToRoleAsync(newUser, UserRoles.Farmer);
                         if (result2.Succeeded)
                         {
-                            return Ok("Farmer created(L2)");
+                            return Ok(new
+                            {
+                                success = "Farmer registerd"
+                            }) ;
                         }
+                        return Ok(new
+                        {
+                            success = "User registered"
+                        });
                     }
-                    return Ok("User Created(L1)");
                 }
-               
+
                 //await _userManager.AddToRoleAsync(newUser, DAL.Helpers.UserRoles.User);
-                return Ok("User created");
+                return Ok(new
+                {
+                    success="User registered"
+                });
             }
             return BadRequest("User could not be created");
         }
