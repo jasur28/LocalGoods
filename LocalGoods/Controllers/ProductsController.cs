@@ -38,7 +38,7 @@ namespace LocalGoods.Controllers
                 {
                     return BadRequest("Not permitted");
                 }
-                (ProductDTO createdProduct, int i) = await productService.Create(productDTO,uniqueFileName);
+                (ProductDTO createdProduct, int statusOfOperation) = await productService.Create(productDTO,uniqueFileName);
                 if (i == 0)
                 {
                     return NotFound("Farm Not Found");
@@ -113,16 +113,16 @@ namespace LocalGoods.Controllers
                         return BadRequest();
                     }
                     productDTO.Id = id;
-                    (ProductDTO viewProductDTO, int i) = await productService.Update(productDTO, uniqueFileName);
-                    if (i == 1)
+                    (ProductDTO viewProductDTO, int statusOfOperation) = await productService.Update(productDTO, uniqueFileName);
+                    if (statusOfOperation == 1)
                     {
                         return Ok(viewProductDTO);
                     }
-                    else if (i == 0)
+                    else if (statusOfOperation == 0)
                     {
                         return NotFound("Farm Not Found");
                     }
-                    else if (i == 2)
+                    else if (statusOfOperation == 2)
                     {
                         return StatusCode(501, productDTO);
                     }
