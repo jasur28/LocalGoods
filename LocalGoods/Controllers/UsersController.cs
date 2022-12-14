@@ -47,14 +47,6 @@ namespace LocalGoods.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles=await userManager.GetRolesAsync(user)
-                //TelePhone = user.PhoneNumber,
-                //Address = user.Address,
-                //City = user.City,
-                //Country = user.Country,
-                //FirstName= user.FirstName,
-                //LastName= user.LastName,
-                //Instagram=user.Instagram,
-                //Facebook=user.FaceBook
             };
             return Ok(dto);
         }
@@ -108,9 +100,10 @@ namespace LocalGoods.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserDTO>> Update(string id, UserDTO userDTO)
+        [HttpPut]
+        public async Task<ActionResult<UserDTO>> Update(UserDTO userDTO)
         {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var users=userManager.Users.Where(x => x.Id == id);
             if(!users.Any())
             {
@@ -125,6 +118,8 @@ namespace LocalGoods.Controllers
                 result=await userManager.SetUserNameAsync(user, userDTO.UserName);
                 if (result.Succeeded)
                 {
+                    userDTO.Id=user.Id;
+                    userDTO.Roles = await userManager.GetRolesAsync(user);
                     return Ok(userDTO);
                 }
                 await userManager.SetEmailAsync(user,email);

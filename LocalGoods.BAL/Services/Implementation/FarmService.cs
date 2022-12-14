@@ -38,8 +38,24 @@ namespace LocalGoods.BAL.Services.Implementation
             (farm, bool b) = await _farmRepository.Create(farm);
             if (b == true)
             {
-                farmDTO.Id = farm.Id;
-                return (farmDTO, 1);
+                ViewFarmDTO viewFarmDTO = new ViewFarmDTO()
+                {
+                    Id = farm.Id,
+                    Name = farm.Name,
+                    Description = farm.Description,
+                    Address = farm.Address,
+                    UserId = farm.UserId,
+                    Email = farm.Email,
+                    ImagePath = farm.Image,
+                    City = farm.City,
+                    Longitude = farm.Longitude,
+                    Latitude = farm.Latitude,
+                    Country = farm.Country,
+                    Telephone = farm.Telephone,
+                    Instagram = farm.Instagram,
+                    FaceBook = farm.FaceBook
+                };
+                return (viewFarmDTO, 1);
             }
             return (farmDTO, 2);
         }
@@ -109,7 +125,7 @@ namespace LocalGoods.BAL.Services.Implementation
 
         public async Task<(FarmDTO,int)> Update(FarmDTO farmDTO,string name)
         {
-            var farm = await _farmRepository.GetById(farmDTO.Id);
+            Farm? farm = await _farmRepository.GetById(farmDTO.Id);
             if(farm is null)
             {
                 return (farmDTO, 0);
@@ -125,9 +141,30 @@ namespace LocalGoods.BAL.Services.Implementation
             farm.Instagram = farmDTO.Instagram;
             farm.Latitude = farmDTO.Latitude;
             farm.Longitude = farmDTO.Longitude;
+            farm.Image = name;
             int i = await _farmRepository.Update(farm);
             farmDTO.UserId = farm.UserId;
-            return (farmDTO, i);
+            ViewFarmDTO viewFarmDTO = new()
+            {
+                Id = farm.Id,
+                Name = farm.Name,
+                Description = farm.Description,
+                Address = farm.Address,
+                City = farm.City,
+                Country = farm.Country,
+                CreatedOn = farm.CreatedOn,
+                Email = farm.Email,
+                FaceBook = farm.FaceBook,
+                Instagram = farm.Instagram,
+                ImagePath = name,
+                Latitude = farm.Latitude,
+                Longitude = farm.Longitude,
+                Telephone = farm.Telephone,
+                Rating = farm.Rating,
+                UserId = farm.UserId
+            };
+            (viewFarmDTO.Products, int k) = await GetProducts(farm.Id);
+            return (viewFarmDTO, i);
         }
 
         public async Task<(List<ViewProductDTO>,int)> GetProducts(int id)
