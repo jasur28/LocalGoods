@@ -83,6 +83,7 @@ namespace LocalGoods.BAL.Services.Implementation
                 Instagram=farm.Instagram,
                 Telephone=farm.Telephone
             };
+            (farmDTO.Products,int _) = await GetProducts(id);
             return farmDTO; 
         }
 

@@ -36,7 +36,7 @@ namespace LocalGoods.Controllers
                 FarmDTO? farm = await farmService.Get(FarmId);
                 if(farm is not null && farm.UserId!= Id)
                 {
-                    return BadRequest("Not permitted");
+                    return BadRequest();
                 }
                 (ProductDTO createdProduct, int statusOfOperation) = await productService.Create(productDTO,uniqueFileName);
                 if (statusOfOperation == 0)
@@ -76,18 +76,31 @@ namespace LocalGoods.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
-            int statusOfOperation = await productService.Delete((int)id);
-            if (statusOfOperation == 1)
+            string uid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ProductDTO? product = await productService.Get(id);
+            if(product is not null)
             {
-                return Ok(true);
-            }
-            else if (statusOfOperation == 0)
-            {
-                return NotFound();
-            }
-            else if (statusOfOperation == 2)
-            {
-                return StatusCode(501);
+                FarmDTO? farmDTO = await farmService.Get(product.FarmId);   
+                if(farmDTO is not null && farmDTO.UserId !=uid)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    int statusOfOperation = await productService.Delete(id);
+                    if (statusOfOperation == 1)
+                    {
+                        return Ok(true);
+                    }
+                    else if (statusOfOperation == 0)
+                    {
+                        return NotFound();
+                    }
+                    else if (statusOfOperation == 2)
+                    {
+                        return StatusCode(501);
+                    }
+                }
             }
             return BadRequest();
         }

@@ -25,7 +25,7 @@ namespace LocalGoods.Controllers
             this.roleManager = roleManager;
         }
         [Authorize(Roles = "Farmer")]
-        [HttpGet("/MyFarms")]
+        [HttpGet("MyFarms")]
         public async Task<ActionResult<List<ViewFarmDTO>>> GetMyFarms()
         {
             string FarmerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
