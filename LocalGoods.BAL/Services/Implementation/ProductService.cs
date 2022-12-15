@@ -47,8 +47,17 @@ namespace LocalGoods.BAL.Services.Implementation
             (product, bool b) = await productRepository.Create(product);
             if (b == true)
             {
-                productDTO.Id = product.Id;
-                return (productDTO, 1);
+                ViewProductDTO viewProductDTO = new()
+                {
+                    Id = product.Id,
+                    Name=product.Name,
+                    ImagePath = name,
+                    Description=product.Description,
+                    FarmId=product.FarmId,
+                    CategoryId=product.CategoryId,
+                    Price = product.Price
+                };
+                return (viewProductDTO, 1);
             }
             return (productDTO, 2);
         }
@@ -101,7 +110,7 @@ namespace LocalGoods.BAL.Services.Implementation
         public async Task<(ProductDTO, int)> Update(ProductDTO productDTO, string name)
         {
 
-            var product = await productRepository.GetById(productDTO.Id);
+            Product? product = await productRepository.GetById(productDTO.Id);
             if(product is null)
             {
                 return (productDTO, 0);
@@ -112,7 +121,18 @@ namespace LocalGoods.BAL.Services.Implementation
             product.Price = productDTO.Price;
             product.Image=name;
             int i = await productRepository.Update(product);
-            return (productDTO, i);
+            product = await productRepository.GetById(productDTO.Id);
+            ViewProductDTO viewProductDTO = new()
+            {
+                Name = product.Name,
+                Description = product.Description,
+                ImagePath = name,
+                CategoryId = product.CategoryId,
+                FarmId = product.FarmId,
+                Price = product.Price,
+                Id=product.Id
+            };
+            return (viewProductDTO, i);
         }
 
     }

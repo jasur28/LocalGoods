@@ -114,10 +114,10 @@ namespace LocalGoods.Controllers
                     return BadRequest();
                 }
                 farmDTO.Id = id;
-                (FarmDTO viewfarmDTO, int statusOfOperation) = await farmService.Update(farmDTO,uniqueFileName);
+                (FarmDTO viewFarmDTO, int statusOfOperation) = await farmService.Update(farmDTO,uniqueFileName);
                 if (statusOfOperation == 1)
                 {
-                    return Ok(farmDTO);
+                    return Ok(viewFarmDTO);
                 }
                 else if (statusOfOperation == 0)
                 {
@@ -125,7 +125,7 @@ namespace LocalGoods.Controllers
                 }
                 else if (statusOfOperation == 2)
                 {
-                    return StatusCode(501, viewfarmDTO);
+                    return StatusCode(501, farmDTO);
                 }
                 return BadRequest();
             }
