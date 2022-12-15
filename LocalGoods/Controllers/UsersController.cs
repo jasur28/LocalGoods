@@ -47,14 +47,6 @@ namespace LocalGoods.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 Roles=await userManager.GetRolesAsync(user)
-                //TelePhone = user.PhoneNumber,
-                //Address = user.Address,
-                //City = user.City,
-                //Country = user.Country,
-                //FirstName= user.FirstName,
-                //LastName= user.LastName,
-                //Instagram=user.Instagram,
-                //Facebook=user.FaceBook
             };
             return Ok(dto);
         }

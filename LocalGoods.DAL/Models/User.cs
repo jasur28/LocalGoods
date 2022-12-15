@@ -23,6 +23,6 @@ namespace LocalGoods.DAL.Models
         public string FaceBook { get; set; }
         public string Instagram { get; set; }
         public ICollection<Farm> Farms { get; set; }
-       // public ICollection<UserRoles> Roles { get; set; }
+       
     }
 }
