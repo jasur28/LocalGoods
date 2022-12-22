@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using LocalGoods.BAL.DTOs;
-using LocalGoods.BAL.Services;
+using LocalGoods.Core.Models;
+using LocalGoods.Core.Services;
+using LocalGoods.Resources;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocalGoods.Controllers
@@ -24,9 +25,9 @@ namespace LocalGoods.Controllers
         }
 
         [HttpPost]
-        public async Task AddCategory([FromBody] CategoryDto category)
+        public async Task AddCategory([FromBody] CategoryResource category)
         {
-            await categoryService.Create(category);
+            await categoryService.Create(mapper.Map<CategoryResource, Category>(category));
         }
 
     }

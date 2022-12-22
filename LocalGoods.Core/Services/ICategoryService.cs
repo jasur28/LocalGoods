@@ -1,13 +1,12 @@
 ﻿using LocalGoods.Core.Models;
-using LocalGoods.BAL.DTOs;
 
-namespace LocalGoods.BAL.Services
+namespace LocalGoods.Core.Services
 {
     public interface ICategoryService
     {
         Task<IEnumerable<Category>> GetAllCategories();
         Task<Category> GetById(int id);
-        Task Create(CategoryDto categoryDto);
+        Task Create(Category category);
         Task Update(Category category);
         Task Delete(Category category);
     }

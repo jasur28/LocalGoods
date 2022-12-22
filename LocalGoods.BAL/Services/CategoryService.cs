@@ -1,13 +1,7 @@
-﻿using LocalGoods.BAL.DTOs;
-using LocalGoods.Core;
+﻿using LocalGoods.Core;
 using LocalGoods.Core.Models;
 using LocalGoods.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using LocalGoods;
 namespace LocalGoods.BAL.Services
 {
     public class CategoryService : ICategoryService
@@ -18,12 +12,8 @@ namespace LocalGoods.BAL.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task Create(CategoryDto categoryDto)
+        public async Task Create(Category category)
         {
-            var category = new Category
-            {
-                Name = categoryDto.Name
-            };
             await unitOfWork.Categories.CreateAsync(category);
             await unitOfWork.CommitAsync();
         }
