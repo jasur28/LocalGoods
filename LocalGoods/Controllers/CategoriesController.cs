@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LocalGoods.Core.Services;
-using Microsoft.AspNetCore.Http;
+using LocalGoods.BAL.DTOs;
+using LocalGoods.BAL.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocalGoods.Controllers
@@ -21,6 +21,12 @@ namespace LocalGoods.Controllers
         {
             var categories=await categoryService.GetAllCategories();
             return Ok(categories);
+        }
+
+        [HttpPost]
+        public async Task AddCategory([FromBody] CategoryDto category)
+        {
+            await categoryService.Create(category);
         }
 
     }

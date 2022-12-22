@@ -12,17 +12,17 @@ namespace LocalGoods.DAL.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly LocalGoodsDbContext localGoodsDbContext;
-        private ProductRepository productRepository;
+        //private ProductRepository productRepository;
         private CategoryRepository categoryRepository;
         public UnitOfWork(LocalGoodsDbContext localGoodsDbContext)
         {
             this.localGoodsDbContext = localGoodsDbContext;
         }
-        public IProductRepository Products => productRepository ??= new ProductRepository(localGoodsDbContext);
+        //public IProductRepository Products => productRepository ??= new ProductRepository(localGoodsDbContext);
         public ICategoryRepository Categories => categoryRepository ??= new CategoryRepository(localGoodsDbContext);
-        public async Task<int> CommitAsync()
+        public async Task CommitAsync()
         {
-            return await localGoodsDbContext.SaveChangesAsync();
+            await localGoodsDbContext.SaveChangesAsync();
         }
         public void Dispose()
         {

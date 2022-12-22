@@ -1,4 +1,5 @@
-﻿using LocalGoods.Core;
+﻿using LocalGoods.BAL.DTOs;
+using LocalGoods.Core;
 using LocalGoods.Core.Models;
 using LocalGoods.Core.Services;
 using System;
@@ -17,16 +18,19 @@ namespace LocalGoods.BAL.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<Category> Create(Category newCategory)
+        public async Task Create(CategoryDto categoryDto)
         {
-            await unitOfWork.Categories.AddAsync(newCategory);
+            var category = new Category
+            {
+                Name = categoryDto.Name
+            };
+            await unitOfWork.Categories.CreateAsync(category);
             await unitOfWork.CommitAsync();
-            return newCategory;
         }
 
         public async Task Delete(Category category)
         {
-            unitOfWork.Categories.Remove(category);
+            unitOfWork.Categories.DeleteAsync(category);
             await unitOfWork.CommitAsync();
         }
 
@@ -40,9 +44,10 @@ namespace LocalGoods.BAL.Services
             return await unitOfWork.Categories.GetByIdAsync(id);
         }
 
-        public async Task Update(Category categoryToBeUpdated, Category category)
+        public async Task Update(Category category)
         {
-            categoryToBeUpdated.Name=category.Name; 
+            var temp = await unitOfWork.Categories.GetByIdAsync(category.Id);
+            temp.Name=category.Name;
             await unitOfWork.CommitAsync(); 
         }
     }

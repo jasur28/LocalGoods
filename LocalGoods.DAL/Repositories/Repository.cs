@@ -7,48 +7,40 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using LocalGoods.DAL.Data;
 #nullable disable
 namespace LocalGoods.DAL.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly DbContext Context;
-        public Repository(DbContext context)
+        protected readonly LocalGoodsDbContext _context;
+        public Repository(LocalGoodsDbContext context)
         {
-            this.Context = context;
+            this._context = context;
         }
-        public async Task AddAsync(TEntity entity)
+        public async Task CreateAsync(TEntity entity)
         {
-            await Context.Set<TEntity>().AddAsync(entity);
-        }
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            return Context.Set<TEntity>().Where(predicate);
+            await _context.AddAsync(entity);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await Context.Set<TEntity>().ToListAsync();
+            return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public ValueTask<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
-            return Context.Set<TEntity>().FindAsync(id);
+            return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public void Remove(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
-            Context.Set<TEntity>().Remove(entity);
+            _context.Update(entity);
         }
-
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public async Task DeleteAsync(TEntity entity)
         {
-            Context.Set<TEntity>().RemoveRange(entities);
-        }
-
-        public Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return Context.Set<TEntity>().SingleOrDefaultAsync(predicate);
+            _context.Remove(entity);
         }
 
     }
