@@ -1,11 +1,16 @@
-﻿using LocalGoods.Core.Repositories;
+﻿using LocalGoods.Core.Models;
+using LocalGoods.Core.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace LocalGoods.Core
 {
     public interface IUnitOfWork : IDisposable
     {
-        //IProductRepository Products { get; }
         ICategoryRepository Categories { get; }
+        Task CreateToken(AuthToken token);
         Task CommitAsync();
+        Task BeginTransaction();    
+        Task RollBackTransaction();
+        Task CommitTransaction();
     }
 }

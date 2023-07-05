@@ -4,6 +4,7 @@ using LocalGoods.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalGoods.DAL.Migrations
 {
     [DbContext(typeof(LocalGoodsDbContext))]
-    partial class LocalGoodsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230628065628_New")]
+    partial class New
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,13 +36,7 @@ namespace LocalGoods.DAL.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("UpdatedUser");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
                 });
@@ -101,9 +98,6 @@ namespace LocalGoods.DAL.Migrations
 
                     b.Property<string>("Instagram")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsFarmer")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -279,36 +273,12 @@ namespace LocalGoods.DAL.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserToken<string>");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("LocalGoods.Core.Models.AuthToken", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserToken<string>");
-
-                    b.HasDiscriminator().HasValue("AuthToken");
-                });
-
-            modelBuilder.Entity("LocalGoods.Core.Models.Category", b =>
-                {
-                    b.HasOne("LocalGoods.Core.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LocalGoods.Core.Models.Product", b =>

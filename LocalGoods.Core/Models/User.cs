@@ -16,5 +16,7 @@ namespace LocalGoods.Core.Models
         public string Country { get; set; }
         public string FaceBook { get; set; }
         public string Instagram { get; set; }
+
+        public bool IsFarmer { get; set; }
     }
 }

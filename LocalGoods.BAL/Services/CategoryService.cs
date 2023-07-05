@@ -2,6 +2,8 @@
 using LocalGoods.Core.Models;
 using LocalGoods.Core.Services;
 using LocalGoods;
+using Microsoft.AspNetCore.Http;
+
 namespace LocalGoods.BAL.Services
 {
     public class CategoryService : ICategoryService
@@ -12,6 +14,17 @@ namespace LocalGoods.BAL.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public async Task<bool> CategoryExistsAsync(Category category)
+        {
+            return await unitOfWork.Categories.CategoryExistsAsync(category);
+        }
+
+        public async Task Create(Category category, string userId)
+        {
+            category.UserId = userId;
+            await Create(category);
+        }
+
         public async Task Create(Category category)
         {
             await unitOfWork.Categories.CreateAsync(category);
@@ -20,7 +33,7 @@ namespace LocalGoods.BAL.Services
 
         public async Task Delete(Category category)
         {
-            unitOfWork.Categories.DeleteAsync(category);
+            await unitOfWork.Categories.DeleteAsync(category);
             await unitOfWork.CommitAsync();
         }
 

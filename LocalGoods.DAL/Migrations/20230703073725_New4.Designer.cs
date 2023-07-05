@@ -4,6 +4,7 @@ using LocalGoods.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalGoods.DAL.Migrations
 {
     [DbContext(typeof(LocalGoodsDbContext))]
-    partial class LocalGoodsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230703073725_New4")]
+    partial class New4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,9 +104,6 @@ namespace LocalGoods.DAL.Migrations
 
                     b.Property<string>("Instagram")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsFarmer")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
