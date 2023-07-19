@@ -20,25 +20,17 @@ namespace LocalGoods.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        private readonly TokenValidationParameters _tokenValidationParameters1;
         private readonly IAuthService authService;
         private readonly IMapper mapper;
         private readonly IUserService userService;
-        private object success;
 
-        public AuthenticationController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration,
-                TokenValidationParameters tokenValidationParameters1,
+        public AuthenticationController(IConfiguration configuration,
                 IAuthService authService,
                 IMapper mapper,
                 IUserService userService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
-            _tokenValidationParameters1 = tokenValidationParameters1;
             this.authService = authService;
             this.mapper = mapper;
             this.userService = userService;
@@ -47,10 +39,6 @@ namespace LocalGoods.API.Controllers
         [HttpPost("register-user")]
         public async Task<IActionResult> Register([FromBody] RegisterVM registerVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Please, provide all the required fields");
-            }
             if (await userService.IsEmailAlreadyExisting(registerVM.EmailAddress))
             {
                 return BadRequest($"User {registerVM.EmailAddress} already exists");
@@ -58,7 +46,8 @@ namespace LocalGoods.API.Controllers
             bool result=await userService.Create(mapper.Map<RegisterVM, User>(registerVM), registerVM.Password);
             if (result)
             {
-                return Ok(await GenerateJWTTokenAsync(mapper.Map<RegisterVM,User>(registerVM)));
+                User user = await userService.GetUserByEmail(registerVM.EmailAddress);
+                return Ok(new { Token = await GenerateJWTTokenAsync(user) });
             }
             return BadRequest("User could not be created");
         }
@@ -70,55 +59,38 @@ namespace LocalGoods.API.Controllers
             {
                 return BadRequest("Please, provide all required fields");
             }
-
-            var userExists = await _userManager.FindByEmailAsync(loginVM.EmailAddress);
-            if (userExists != null && await _userManager.CheckPasswordAsync(userExists, loginVM.Password))
+            if (await userService.AreCorrectCredentialsEntered(loginVM.EmailAddress, loginVM.Password))
             {
-                var tokenValue = await GenerateJWTTokenAsync(userExists);
-                return Ok(tokenValue);
+                User user=await userService.GetUserByEmail(loginVM.EmailAddress);
+                var tokenString = await GenerateJWTTokenAsync(user);
+                return Ok(new { Token = tokenString });
             }
             return Unauthorized();
         }
-        private async Task<AuthResultVM> GenerateJWTTokenAsync(User user)
+
+        private async Task<string> GenerateJWTTokenAsync(User user)
         {
-            var authClaims = new List<Claim>()
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(s: _configuration["JWT:Secret"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Name,user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id)
+                };
+            var roles = await userService.GetUserRoles(user);
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-            var userRoles = await _userManager.GetRolesAsync(user);
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            var authSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
-            JwtSecurityToken securityToken = new(                                                
-                                                 issuer: _configuration["JWT:Issuer"],
-                                                 audience: _configuration["JWT:Audience"],
-                                                 expires: DateTime.UtcNow.AddMinutes(60),
-                                                 claims: authClaims,
-                                                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                                                );
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
-            var user1=await _userManager.FindByEmailAsync(user.Email);
-            var authToken = new AuthToken()
-            {
-                Name = "Bearer Token",
-                LoginProvider = "Custom",
-                UserId = user1.Id,
-                Value = securityToken.Id
-            };
-            await authService.Create(authToken);
-            var response = new AuthResultVM()
-            {
-                Token = jwtToken,
-                RefreshToken = authToken.Value,
-                ExpiresAt = securityToken.ValidTo
-            };
-            return response;
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:Issuer"],
+                audience: _configuration["JWT:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: credentials
+            );
+            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -20,7 +20,6 @@ namespace LocalGoods.Mappings
             CreateMap<RegisterVM, User>()
                 .ForMember(des => des.Email, opt => opt.MapFrom(src => src.EmailAddress))
                 .ForMember(des => des.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(des => des.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(des => des.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(des => des.IsFarmer, opt => opt.MapFrom(src => src.IsFarmer))
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
@@ -29,7 +28,6 @@ namespace LocalGoods.Mappings
             CreateMap<User, RegisterVM>()
                 .ForMember(des => des.EmailAddress, opt => opt.MapFrom(src => src.Email))
                 .ForMember(des => des.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(des => des.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(des => des.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(des => des.IsFarmer, opt => opt.MapFrom(src => src.IsFarmer));
             ;

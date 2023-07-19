@@ -22,6 +22,7 @@ namespace LocalGoods.BAL.Services
         }
         public async Task<bool> Create(User user, string password)
         {
+            user.UserName = user.Email;
             await unitOfWork.BeginTransaction();          
             var result=await userManager.CreateAsync(user, password);
             if(IsOperationSuccessful(result))
@@ -61,6 +62,24 @@ namespace LocalGoods.BAL.Services
         {
             var result=await userManager.FindByEmailAsync(email);
             return result != null;
+        }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            User user = await userManager.FindByEmailAsync(email);
+            return user;
+        }
+        public async Task<bool> AreCorrectCredentialsEntered(string email, string password)
+        {
+            User user=await GetUserByEmail(email);
+            if(user != null)
+            {
+                return await userManager.CheckPasswordAsync(user, password);
+            }
+            return false;
+        }
+        public async Task<IList<string>> GetUserRoles(User user)
+        {
+            return await userManager.GetRolesAsync(user);
         }
     }
 }
